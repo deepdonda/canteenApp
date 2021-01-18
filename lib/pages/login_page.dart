@@ -1,8 +1,11 @@
+import 'package:canteen/services/AuthServices.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/pages/regi_page.dart';
 import 'package:canteen/utils/color.dart';
 import 'package:canteen/widgets/btn_widget.dart';
 import 'package:canteen/widgets/herder_container.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:canteen/main.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var email, password, token;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,8 +29,25 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    _textInput(hint: "Email", icon: Icons.email),
-                    _textInput(hint: "Password", icon: Icons.vpn_key),
+                    TextField(
+                        decoration: InputDecoration(
+                          labelText: "Email",
+                          icon: Icon(Icons.email),
+                        ),
+                        onChanged: (val) {
+                          email = val;
+                        }),
+                    // _textInput(hint: "Password", icon: Icons.vpn_key),
+                    TextField(
+                        
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          icon: Icon(Icons.vpn_key),
+                        ),
+                        obscureText: true,
+                        onChanged: (val) {
+                          password = val;
+                        }),
                     Container(
                       margin: EdgeInsets.only(top: 10),
                       alignment: Alignment.centerRight,
@@ -38,10 +59,38 @@ class _LoginPageState extends State<LoginPage> {
                       child: Center(
                         child: ButtonWidget(
                           onClick: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegPage()));
+                            Authservices().login(email, password).then((val) {
+                              print(val);
+                              if (val.data['token'] != null) {
+                                token = val.data['token'];
+                                print(token);
+                                Fluttertoast.showToast(
+                                    msg: "Authenticated",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                                setState(() {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage()));
+                                });
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: val.data['msg'],
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              }
+                            });
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => RegPage()));
                           },
                           btnText: "LOGIN",
                         ),

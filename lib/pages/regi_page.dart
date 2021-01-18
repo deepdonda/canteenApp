@@ -1,8 +1,10 @@
+import 'package:canteen/services/AuthServices.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/pages/login_page.dart';
 import 'package:canteen/utils/color.dart';
 import 'package:canteen/widgets/btn_widget.dart';
 import 'package:canteen/widgets/herder_container.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegPage extends StatefulWidget {
   @override
@@ -10,6 +12,8 @@ class RegPage extends StatefulWidget {
 }
 
 class _RegPageState extends State<RegPage> {
+  var email, password, name, number;
+  var token, temp;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,16 +29,80 @@ class _RegPageState extends State<RegPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    _textInput(hint: "Fullname", icon: Icons.person),
-                    _textInput(hint: "Email", icon: Icons.email),
-                    _textInput(hint: "Phone Number", icon: Icons.call),
-                    _textInput(hint: "Password", icon: Icons.vpn_key),
+                    TextField(
+                        decoration: InputDecoration(
+                          labelText: "Full name",
+                          icon: Icon(Icons.person),
+                        ),
+                        onChanged: (val) {
+                          name = val;
+                        }),
+                    TextField(
+                        decoration: InputDecoration(
+                          labelText: "Email",
+                          icon: Icon(Icons.email),
+                        ),
+                        onChanged: (val) {
+                          email = val;
+                        }),
+                    TextField(
+                        decoration: InputDecoration(
+                          labelText: "password",
+                          icon: Icon(Icons.vpn_key),
+                        ),
+                        obscureText: true,
+                        onChanged: (val) {
+                          password = val;
+                        }),
+                    TextField(
+                      keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          labelText: "Phone Number",
+                          icon: Icon(Icons.call),
+                        ),
+                        onChanged: (val) {
+                          number = val;
+                        }),
+                    // _textInput(hint: "Fullname", icon: Icons.person),
+                    // _textInput(hint: "Email", icon: Icons.email),
+                    // _textInput(hint: "Phone Number", icon: Icons.call),
+                    // _textInput(hint: "Password", icon: Icons.vpn_key),
                     Expanded(
                       child: Center(
                         child: ButtonWidget(
                           btnText: "REGISTER",
                           onClick: () {
-                            Navigator.pop(context);
+                            Authservices()
+                                .register(name, email, password, number)
+                                .then((val) {
+                              print(val);
+                              if (val.data['message'] != null) {
+                                // token=val.data['token'];
+                                print(token);
+                                Fluttertoast.showToast(
+                                    msg: val.data['message'],
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                                temp = "a";
+                                setState(() {
+                                  Navigator.pop(context);
+                                });
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: val.data['msg'],
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              }
+                            });
+                            if (temp != null) {
+                              //Navigator.pop(context);
+                            }
                           },
                         ),
                       ),
