@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:canteen/main.dart';
 import 'package:flutter/material.dart';
+import 'package:canteen/pages/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 4), () =>
     //  MyNavigator.goToHome(context)    
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => HomePage())));
+            builder: (BuildContext context) => LoginPage())));
      
   }
 
