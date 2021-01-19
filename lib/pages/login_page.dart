@@ -1,3 +1,4 @@
+import 'package:canteen/pages/screens/home/home_screen.dart';
 import 'package:canteen/services/AuthServices.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/pages/regi_page.dart';
@@ -14,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   var email, password, token;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,98 +28,134 @@ class _LoginPageState extends State<LoginPage> {
               flex: 1,
               child: Container(
                 margin: EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    TextField(
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          icon: Icon(Icons.email),
-                        ),
-                        onChanged: (val) {
-                          email = val;
-                        }),
-                    // _textInput(hint: "Password", icon: Icons.vpn_key),
-                    TextField(
-                        
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          icon: Icon(Icons.vpn_key),
-                        ),
-                        obscureText: true,
-                        onChanged: (val) {
-                          password = val;
-                        }),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "Forgot Password?",
-                      ),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: ButtonWidget(
-                          onClick: () {
-                            Authservices().login(email, password).then((val) {
-                              print(val);
-                              if (val.data['token'] != null) {
-                                token = val.data['token'];
-                                print(token);
-                                Fluttertoast.showToast(
-                                    msg: "Authenticated",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                                setState(() {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomePage()));
-                                });
+                child: Form(
+                  key: _formKey,
+                  child: (Expanded(
+                    //mainAxisSize: MainAxisSize.max,
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        TextFormField(
+                            //controller: TextEditingController(text: email),
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              icon: Icon(Icons.email),
+                            ),
+                            onChanged: (val) {
+                              email = val;
+                            },
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Enter Email';
+                              } else if (RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(value)) {
+                                return null;
                               } else {
-                                Fluttertoast.showToast(
-                                    msg: val.data['msg'],
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
+                                return 'Enter valid email';
                               }
-                            });
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => RegPage()));
-                          },
-                          btnText: "LOGIN",
+                            }),
+                        // _textInput(hint: "Password", icon: Icons.vpn_key),
+                        TextFormField(
+                            decoration: InputDecoration(
+                              labelText: "Password",
+                              icon: Icon(Icons.vpn_key),
+                            ),
+                            obscureText: true,
+                            onChanged: (val) {
+                              password = val;
+                            },
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Enter password';
+                              } else if (RegExp(
+                                      r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}')
+                                  .hasMatch(value)) {
+                                return null;
+                              } else {
+                                return 'Enter valid password';
+                              }
+                            }),
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Forgot Password?",
+                          ),
                         ),
-                      ),
-                    ),
-                    const Divider(
-                      color: Colors.orange,
-                      height: 20,
-                      thickness: 5,
-                      indent: 20,
-                      endIndent: 0,
-                    ),
-                    Text("Don't have an account ?"),
-                    Expanded(
-                      child: Center(
-                        child: ButtonWidget(
-                          onClick: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegPage()));
-                          },
-                          btnText: "Registor",
+                        Expanded(
+                          child: Center(
+                            child: ButtonWidget(
+                              onClick: () {
+                                if (_formKey.currentState.validate()) {
+                                  Authservices()
+                                      .login(email, password)
+                                      .then((val) {
+                                    print(val);
+                                    if (val.data['token'] != null) {
+                                      token = val.data['token'];
+                                      print(token);
+                                      Fluttertoast.showToast(
+                                          msg: "Authenticated",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.green,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                      setState(() {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomeScreen()));
+                                      });
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: val.data['msg'],
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                    }
+                                  });
+                                } else {
+                                  print("not ok");
+                                }
+
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => RegPage()));
+                              },
+                              btnText: "LOGIN",
+                            ),
+                          ),
                         ),
-                      ),
+                        const Divider(
+                          color: Colors.orange,
+                          height: 20,
+                          thickness: 5,
+                          indent: 20,
+                          endIndent: 0,
+                        ),
+                        Text("Don't have an account ?"),
+                        Expanded(
+                          child: Center(
+                            child: ButtonWidget(
+                              onClick: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RegPage()));
+                              },
+                              btnText: "Registor",
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  )),
                 ),
               ),
             )
