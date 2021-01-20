@@ -12,6 +12,8 @@ $ git clone https://github.com/shekhutsav1962001/canteenApp
 
 $ cd canteenApp
 
+$ flutter packages get
+
 $ flutter run 
 
 ```
