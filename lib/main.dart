@@ -1,4 +1,5 @@
 import 'package:canteen/navbar.dart';
+import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/foodcard.dart';
@@ -50,6 +51,20 @@ class _HomePageState extends State<HomePage> {
     "https://pngimage.net/wp-content/uploads/2018/06/sizzler-png-8.png",
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    getdata();
+  }
+
+  void getdata() async {
+    Authservices().getfood().then((val) async {
+        print("#####################################");
+        print(val);
+         print("#####################################");                                                                    
+
+    });
+  }
   
 
   @override
