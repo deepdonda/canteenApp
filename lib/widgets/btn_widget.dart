@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:canteen/utils/color.dart';
 
-class ButtonWidget extends StatelessWidget {
+class ButtonWidget extends StatefulWidget {
   var btnText ="";
   var onClick;
 
@@ -9,27 +8,22 @@ class ButtonWidget extends StatelessWidget {
   ButtonWidget({this.btnText, this.onClick});
 
   @override
+  _ButtonWidgetState createState() => _ButtonWidgetState();
+}
+
+class _ButtonWidgetState extends State<ButtonWidget> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onClick,
+      onTap: widget.onClick,
       child: Container(
-        width: double.infinity,
         height: 40,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [orangeColors, orangeLightColors],
-              end: Alignment.centerLeft,
-              begin: Alignment.centerRight),
-          borderRadius: BorderRadius.all(
-            Radius.circular(100),
-          ),
-        ),
         alignment: Alignment.center,
         child: Text(
-          btnText,
+          widget.btnText,
           style: TextStyle(
               fontSize: 20,
-              color: Colors.white,
+              color: Colors.orange,
               fontWeight: FontWeight.bold),
         ),
       ),

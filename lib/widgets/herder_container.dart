@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:canteen/utils/color.dart';
+
 
 class HeaderContainer extends StatelessWidget {
   var text = "Login";
@@ -10,25 +10,27 @@ class HeaderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [orangeColors, orangeLightColors],
-              end: Alignment.bottomCenter,
-              begin: Alignment.topCenter),
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100))),
-      child: Stack(
+     
+      child: Column(
         children: <Widget>[
-          Positioned(
-            bottom: 20,
-              right: 20,
+          Padding(
+            padding: const EdgeInsets.only(top: 110,bottom: 20),
+            child: Center(
+              child: Image.asset(
+                "assets/img/logo.png",
+                height: 150,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Center(
               child: Text(
             text,
-            style: TextStyle(color: Colors.white,fontSize: 20),
+            style: TextStyle(color: Colors.orange,fontSize: 30,fontWeight: FontWeight.bold,),
           )),
-          Center(
-            child: Image.asset("assets/img/a.png",height: 150,width: 250,),
-          ),
+          
         ],
+        
       ),
     );
   }

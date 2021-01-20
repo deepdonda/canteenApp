@@ -1,8 +1,8 @@
 import 'dart:async';
-
-import 'package:canteen/main.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen/pages/login_page.dart';
+import 'package:canteen/login.dart';
+import 'package:canteen/main.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -10,27 +10,38 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Widget page = HomePage();
+  final storage = FlutterSecureStorage();
+
   @override
   void initState() {
-    
     super.initState();
-    Timer(Duration(seconds: 4), () =>
-    //  MyNavigator.goToHome(context)    
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => LoginPage())));
-     
+    Timer(Duration(seconds: 4), () => checkLogin());
+  }
+
+  void checkLogin() async {
+    String token = await storage.read(key: "token");
+    if (token != null) {
+      setState(() {
+        page = HomePage();
+      });
+    } else {
+      setState(() {
+        page = LoginPage();
+      });
+    }
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => page));
   }
 
   @override
   Widget build(BuildContext context) {
-    print("again");
+    // print("again");
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(color: Colors.white)
-          ),
+          Container(decoration: BoxDecoration(color: Colors.white)),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -43,7 +54,10 @@ class _SplashScreenState extends State<SplashScreen> {
                       Padding(
                         padding: EdgeInsets.only(top: 200.0),
                       ),
-                      Image.asset("assets/img/logo.png",height: 200,),
+                      Image.asset(
+                        "assets/img/logo.png",
+                        height: 200,
+                      ),
                       Text(
                         "FoodZone",
                         style: TextStyle(
@@ -60,7 +74,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CircularProgressIndicator( valueColor: new AlwaysStoppedAnimation<Color>(Colors.orange),),
+                    CircularProgressIndicator(
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.orange),
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
                     ),

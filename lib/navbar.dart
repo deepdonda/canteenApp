@@ -1,7 +1,11 @@
+import 'package:canteen/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Navbar extends StatelessWidget {
-  const Navbar({Key key}) : super(key: key);
+  // const Navbar({Key key}) : super(key: key);
+
+  final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,10 @@ class Navbar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/img/logo.png",height: 100,),
+              Image.asset(
+                "assets/img/logo.png",
+                height: 100,
+              ),
             ],
           ),
         ),
@@ -41,9 +48,12 @@ class Navbar extends StatelessWidget {
         title: Text("Your Cart"),
       ),
 
-
       ListTile(
-        onTap: () {},
+        onTap: () async {
+          await storage.delete(key: "token");
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => LoginPage()));
+        },
         leading: Icon(
           Icons.logout,
           color: Colors.black,

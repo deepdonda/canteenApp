@@ -1,12 +1,12 @@
-import 'package:canteen/pages/screens/home/home_screen.dart';
+import 'package:canteen/main.dart';
 import 'package:canteen/services/AuthServices.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen/pages/regi_page.dart';
-import 'package:canteen/utils/color.dart';
+import 'package:canteen/register.dart';
 import 'package:canteen/widgets/btn_widget.dart';
 import 'package:canteen/widgets/herder_container.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:canteen/main.dart';
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,10 +16,14 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   var email, password, token;
   final _formKey = GlobalKey<FormState>();
+
+  final storage = new FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(color: Colors.white),
         padding: EdgeInsets.only(bottom: 30),
         child: Column(
           children: <Widget>[
@@ -77,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             }),
                         Container(
-                          margin: EdgeInsets.only(top: 10),
+                          margin: EdgeInsets.only(top: 20, bottom: 20),
                           alignment: Alignment.centerRight,
                           child: Text(
                             "Forgot Password?",
@@ -90,25 +94,45 @@ class _LoginPageState extends State<LoginPage> {
                                 if (_formKey.currentState.validate()) {
                                   Authservices()
                                       .login(email, password)
-                                      .then((val) {
+                                      .then((val) async {
                                     print(val);
                                     if (val.data['token'] != null) {
-                                      token = val.data['token'];
-                                      print(token);
-                                      Fluttertoast.showToast(
-                                          msg: "Authenticated",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          backgroundColor: Colors.green,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                      setState(() {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomeScreen()));
-                                      });
+                                      if (val.data['blocked'] == false) {
+                                        print("YOU CAN LOGIN");
+                                        token = val.data['token'];
+                                        await storage.write(
+                                            key: "token", value: token);
+
+                                        print(token);
+                                        Fluttertoast.showToast(
+                                            msg: "Login success",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: Colors.greenAccent,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                        setState(() {
+                                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                          builder: (BuildContext context) =>HomePage()));
+                                        });
+                                      } else {
+                                        print("YOU CAN NOT LOGIN");
+                                        Fluttertoast.showToast(
+                                            msg: "you are blocked by admin",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: Colors.orange,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                        setState(() {
+
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginPage()));
+                                        });
+                                      }
                                     } else {
                                       Fluttertoast.showToast(
                                           msg: val.data['msg'],
@@ -122,24 +146,25 @@ class _LoginPageState extends State<LoginPage> {
                                 } else {
                                   print("not ok");
                                 }
-
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => RegPage()));
                               },
-                              btnText: "LOGIN",
+                              btnText: "Login",
                             ),
                           ),
                         ),
                         const Divider(
                           color: Colors.orange,
-                          height: 20,
-                          thickness: 5,
-                          indent: 20,
+                          height: 30,
+                          thickness: 2,
+                          indent: 0,
                           endIndent: 0,
                         ),
-                        Text("Don't have an account ?"),
+                        Container(
+                          margin: EdgeInsets.only(top: 10, bottom: 10),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Don't have account?",
+                          ),
+                        ),
                         Expanded(
                           child: Center(
                             child: ButtonWidget(
@@ -149,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                     MaterialPageRoute(
                                         builder: (context) => RegPage()));
                               },
-                              btnText: "Registor",
+                              btnText: "Register",
                             ),
                           ),
                         ),
@@ -160,25 +185,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             )
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _textInput({controller, hint, icon}) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.white,
-      ),
-      padding: EdgeInsets.only(left: 10),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          prefixIcon: Icon(icon),
         ),
       ),
     );

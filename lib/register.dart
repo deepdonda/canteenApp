@@ -1,7 +1,6 @@
 import 'package:canteen/services/AuthServices.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen/pages/login_page.dart';
-import 'package:canteen/utils/color.dart';
+import 'package:canteen/login.dart';
 import 'package:canteen/widgets/btn_widget.dart';
 import 'package:canteen/widgets/herder_container.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,6 +18,7 @@ class _RegPageState extends State<RegPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(color: Colors.white),
         padding: EdgeInsets.only(bottom: 30),
         child: Column(
           children: <Widget>[
@@ -108,16 +108,12 @@ class _RegPageState extends State<RegPage> {
                               return 'Enter valid Phone number';
                             }
                           }),
-                          //^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$
-                      // _textInput(hint: "Fullname", icon: Icons.person),
-                      // _textInput(hint: "Email", icon: Icons.email),
-                      // _textInput(hint: "Phone Number", icon: Icons.call),
-                      // _textInput(hint: "Password", icon: Icons.vpn_key),
+                  
                       SizedBox(height: 10,),
                       Expanded(
                         child: Center(
                           child: ButtonWidget(
-                            btnText: "REGISTER",
+                            btnText: "Register",
                             onClick: () {
                               if (_formKey.currentState.validate()) {
                                 Authservices()
@@ -143,7 +139,7 @@ class _RegPageState extends State<RegPage> {
                                         msg: val.data['msg'],
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: Colors.red,
+                                        backgroundColor: Colors.orange,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
                                   }
@@ -160,13 +156,18 @@ class _RegPageState extends State<RegPage> {
                         ),
                       ),
                       const Divider(
-                        color: Colors.orange,
-                        height: 20,
-                        thickness: 5,
-                        indent: 20,
-                        endIndent: 0,
-                      ),
-                      Text("Already a member ? "),
+                          color: Colors.orange,
+                          height: 30,
+                          thickness: 2,
+                          indent: 0,
+                          endIndent: 0,
+                        ),
+                      
+                      Container(
+                          margin: EdgeInsets.only(top: 10,bottom: 10),
+                          alignment: Alignment.center,
+                          child: Text("Already a member ? "),
+                        ),
                       Expanded(
                         child: Center(
                           child: ButtonWidget(
@@ -181,16 +182,7 @@ class _RegPageState extends State<RegPage> {
                           ),
                         ),
                       ),
-                      // RichText(
-                      //   text: TextSpan(children: [
-                      //     TextSpan(
-                      //         text: "Already a member ? ",
-                      //         style: TextStyle(color: Colors.black)),
-                      //     TextSpan(
-                      //         text: "Login",
-                      //         style: TextStyle(color: orangeColors)),
-                      //   ]),
-                      // )
+                     
                     ],
                   )),
                 ),
@@ -202,22 +194,5 @@ class _RegPageState extends State<RegPage> {
     );
   }
 
-  Widget _textInput({controller, hint, icon}) {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.white,
-      ),
-      padding: EdgeInsets.only(left: 10),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          prefixIcon: Icon(icon),
-        ),
-      ),
-    );
-  }
+  
 }
