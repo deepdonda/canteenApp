@@ -109,7 +109,7 @@ class _RegPageState extends State<RegPage> {
                             }
                           }),
                   
-                      SizedBox(height: 10,),
+                      SizedBox(height: 20,),
                       Expanded(
                         child: Center(
                           child: ButtonWidget(
