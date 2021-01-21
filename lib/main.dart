@@ -1,8 +1,15 @@
+import 'dart:convert';
+
+import 'package:canteen/loading.dart';
 import 'package:canteen/navbar.dart';
-import 'package:canteen/services/AuthServices.dart';
+// import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/foodcard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => HomePage(),
@@ -11,7 +18,7 @@ var routes = <String, WidgetBuilder>{
 
 
 void main() => runApp(MyApp());
-
+var items,response,token ;
 class MyApp extends StatelessWidget {
 
   
@@ -25,7 +32,6 @@ class MyApp extends StatelessWidget {
       
       theme: ThemeData(
         primarySwatch: Colors.orange,
-        // backgroundColor: Colors.white
       ),
       routes: routes,
     );
@@ -38,35 +44,40 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-   List<String> imgUrl = [
-    "https://appcanteen.herokuapp.com/backend/uploads/1-15-2021-23-44-45-1.jpg",
-    "https://toreys.net/wp-content/uploads/2019/06/steak-fries-400x209-reduced.png",
-
- 
-    "https://pngimage.net/wp-content/uploads/2018/06/sizzler-png-4.png",
-
- 
-    "https://pngimage.net/wp-content/uploads/2018/06/sizzler-png-3.png",
-    "https://pngimage.net/wp-content/uploads/2018/06/sizzler-png-2.png",
-    "https://pngimage.net/wp-content/uploads/2018/06/sizzler-png-8.png",
-  ];
-
+  FlutterSecureStorage storage = FlutterSecureStorage();
   @override
   void initState() {
     super.initState();
+    gettoken();
+    // getdata();
+  }
+  void gettoken() async {
+    token = await storage.read(key: "token");
     getdata();
   }
-
   void getdata() async {
-    Authservices().getfood().then((val) async {
-        print("#####################################");
-        print(val);
-         print("#####################################");                                                                    
-
-    });
+    
+      // print(response);
+     response = await http.get(
+      "https://appcanteen.herokuapp.com/user/getallfooditem",
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+       var val = json.decode(response.body);
+       items =  val["msg"];
+      //  print(items);
+    } else {
+      Fluttertoast.showToast(
+          msg: "Something went wrong!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.orange,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+    
   }
   
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,11 +98,13 @@ class _HomePageState extends State<HomePage> {
       // body: Center(child: Text("home page"),),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+  
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+               
               width: double.infinity,
               height: 50.0,
               decoration: BoxDecoration(
@@ -132,19 +145,17 @@ class _HomePageState extends State<HomePage> {
             //Now let's build the food menu
             //I'm going to create a custom widget
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                //let's change the aspect ration for the child card
-                childAspectRatio: 0.7,
-                children: [
-                  foodCard(imgUrl[0], "Meat plate", "25"),
-                  foodCard(imgUrl[1], "Meat plate", "25"),
-                  foodCard(imgUrl[2], "Meat plate", "25"),
-                  foodCard(imgUrl[3], "Meat plate", "25"),
-                  foodCard(imgUrl[4], "Meat plate", "25"),
-                  foodCard(imgUrl[5], "Meat plate", "25"),
-                ],
-              ),
+              child: response != null
+              ? GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.68),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  var item = items[index];
+                  var url ="https://appcanteen.herokuapp.com/backend/uploads/"+item['foodimage'];
+                  return foodCard(url, item['foodname'], item['foodprice'],item['foodqty']);
+                }
+              )
+              :SplashScreen()
             )
           ],
         ),
