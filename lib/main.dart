@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:canteen/loading.dart';
+//import 'package:canteen/loading.dart';
 import 'package:canteen/navbar.dart';
 // import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
@@ -126,7 +126,10 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      
+                      
+                    },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
                       child: Icon(
@@ -152,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   var item = items[index];
                   var url ="https://appcanteen.herokuapp.com/backend/uploads/"+item['foodimage'];
-                  return foodCard(url, item['foodname'], item['foodprice'],item['foodqty']);
+                  return foodCard(url, item['foodname'], item['foodprice'],item['foodqty'],item);
                 }
               )
               :SplashScreen()
