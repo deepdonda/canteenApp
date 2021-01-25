@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:canteen/loading.dart';
 import 'package:canteen/navbar.dart';
 // import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
@@ -28,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: SplashScreen(), 
       
       theme: ThemeData(
         primarySwatch: Colors.orange,
