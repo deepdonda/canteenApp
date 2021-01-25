@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
        var val = json.decode(response.body);
        items =  val["msg"];
       //  print(items);
+      setState(() {});
     } else {
       Fluttertoast.showToast(
           msg: "Something went wrong!",
@@ -117,7 +118,13 @@ class _HomePageState extends State<HomePage> {
                       hintText: "Search... ",
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 20.0),
+                      
                     ),
+                    onChanged: (text)
+                    {
+											text = text.toLowerCase();
+                      print(text);                      
+                    },
                   )),
                   RaisedButton(
                     elevation: 3.0,
@@ -152,8 +159,7 @@ class _HomePageState extends State<HomePage> {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   var item = items[index];
-                  var url ="https://appcanteen.herokuapp.com/backend/uploads/"+item['foodimage'];
-                  return foodCard(url, item['foodname'], item['foodprice'],item['foodqty'],item);
+                  return foodCard(item['foodimage'], item['foodname'], item['foodprice'],item['foodqty'],item);
                 }
               )
               :SplashScreen()

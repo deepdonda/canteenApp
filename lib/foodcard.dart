@@ -85,7 +85,7 @@ Widget foodCard(String img, String title, int price,int qty,var item) {
                             msg: val["msg"],
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.orange,
+                            backgroundColor: Colors.green,
                             textColor: Colors.white,
                             fontSize: 16.0);                        
                       } else {

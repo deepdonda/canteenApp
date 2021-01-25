@@ -6,7 +6,7 @@ import 'package:canteen/navbar.dart';
 // import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
 import 'package:flutter/material.dart';
-import 'package:canteen/foodcard.dart';
+// import 'package:canteen/foodcard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
@@ -177,8 +177,8 @@ class _CartPageState extends State<CartPage> {
                   
                   itemBuilder: (context, index) {
                     var item = items[index];
-                    var url ="https://appcanteen.herokuapp.com/backend/uploads/"+item['foodimage'];
-                    return CartCard(url, item['foodname'], item['foodprice'],item['foodqty'],item);
+                  
+                    return CartCard(item['foodimage'], item['foodname'], item['foodprice'],item['foodqty'],item);
                     //setState(() {});
                     
                   }
