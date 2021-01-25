@@ -2,7 +2,7 @@ import 'package:canteen/services/AuthServices.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/login.dart';
 import 'package:canteen/widgets/btn_widget.dart';
-import 'package:canteen/widgets/herder_container.dart';
+import 'package:canteen/widgets/header_container.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RegPage extends StatefulWidget {
