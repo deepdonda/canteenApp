@@ -1,6 +1,9 @@
 import 'package:canteen/login.dart';
+import 'package:canteen/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'cart.dart';
 
 class Navbar extends StatelessWidget {
   // const Navbar({Key key}) : super(key: key);
@@ -40,12 +43,26 @@ class Navbar extends StatelessWidget {
       ),
 
       ListTile(
-        onTap: () {},
+        onTap: ()async {
+           Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => CartPage()));
+        },
         leading: Icon(
           Icons.shopping_cart,
           color: Colors.black,
         ),
         title: Text("Your Cart"),
+      ),
+       ListTile(
+        onTap: ()async {
+           Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => HomePage()));
+        },
+        leading: Icon(
+          Icons.home,
+          color: Colors.black,
+        ),
+        title: Text("Your Home"),
       ),
 
       ListTile(
