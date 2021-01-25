@@ -1,9 +1,4 @@
 import 'dart:convert';
-<<<<<<< HEAD
-=======
-
-//import 'package:canteen/loading.dart';
->>>>>>> 1d1c8c91977f647710b9978cea37a460b2781d7f
 import 'package:canteen/navbar.dart';
 // import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
