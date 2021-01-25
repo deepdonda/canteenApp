@@ -12,26 +12,30 @@ class HeaderContainer extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
      
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 110,bottom: 20),
-            child: Center(
-              child: Image.asset(
-                "assets/img/logo.png",
-                height: 150,
-                fit: BoxFit.fill,
+      child: ListView(
+        shrinkWrap: true,
+        children: <Widget>[Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 50,bottom: 20),
+              child: Center(
+                child: Image.asset(
+                  "assets/img/logo.png",
+                  height: 150,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
-          ),
-          Center(
-              child: Text(
-            text,
-            style: TextStyle(color: Colors.orange,fontSize: 30,fontWeight: FontWeight.bold,),
-          )),
+            Center(
+                child: Text(
+              text,
+              style: TextStyle(color: Colors.orange,fontSize: 30,fontWeight: FontWeight.bold,),
+            )),
+            
+          ],
           
-        ],
-        
+        ),
+        ]
       ),
     );
   }
