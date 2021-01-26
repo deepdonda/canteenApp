@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+//import 'package:canteen/loading.dart';
 import 'package:canteen/navbar.dart';
 // import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(), 
+      home: SplashScreen(),
       
       theme: ThemeData(
         primarySwatch: Colors.orange,
@@ -64,7 +66,6 @@ class _HomePageState extends State<HomePage> {
        var val = json.decode(response.body);
        items =  val["msg"];
       //  print(items);
-      setState(() {});
     } else {
       Fluttertoast.showToast(
           msg: "Something went wrong!",
@@ -118,13 +119,7 @@ class _HomePageState extends State<HomePage> {
                       hintText: "Search... ",
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 20.0),
-                      
                     ),
-                    onChanged: (text)
-                    {
-											text = text.toLowerCase();
-                      print(text);                      
-                    },
                   )),
                   RaisedButton(
                     elevation: 3.0,
@@ -159,7 +154,8 @@ class _HomePageState extends State<HomePage> {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   var item = items[index];
-                  return foodCard(item['foodimage'], item['foodname'], item['foodprice'],item['foodqty'],item);
+                  var url =item['foodimage'];
+                  return foodCard(url, item['foodname'], item['foodprice'],item['foodqty'],item);
                 }
               )
               :SplashScreen()
