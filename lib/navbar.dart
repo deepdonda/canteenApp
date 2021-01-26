@@ -1,3 +1,4 @@
+import 'package:canteen/emptycart.dart';
 import 'package:canteen/login.dart';
 import 'package:canteen/main.dart';
 import 'package:flutter/material.dart';
@@ -33,17 +34,6 @@ class Navbar extends StatelessWidget {
       ),
       //Now let's Add the button for the Menu
       //and let's copy that and modify it
-       ListTile(
-        onTap: () async {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
-        },
-        leading: Icon(
-          Icons.home,
-          color: Colors.black,
-        ),
-        title: Text("Your Home"),
-      ),
       ListTile(
         onTap: () {},
         leading: Icon(
@@ -54,9 +44,9 @@ class Navbar extends StatelessWidget {
       ),
 
       ListTile(
-        onTap: () async {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (BuildContext context) => CartPage()));
+        onTap: ()async {
+           Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => CartPage()));
         },
         leading: Icon(
           Icons.shopping_cart,
@@ -64,7 +54,17 @@ class Navbar extends StatelessWidget {
         ),
         title: Text("Your Cart"),
       ),
-     
+       ListTile(
+        onTap: ()async {
+           Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => HomePage()));
+        },
+        leading: Icon(
+          Icons.home,
+          color: Colors.black,
+        ),
+        title: Text("Your Home"),
+      ),
 
       ListTile(
         onTap: () async {

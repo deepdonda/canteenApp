@@ -11,7 +11,6 @@ void gettoken() async {
    // getdata();
   }
 
-// ignore: non_constant_identifier_names
 Widget CartCard(String img, String title, int price, int qty, var item) {
   
   return Container(
@@ -72,9 +71,7 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
                                          
                       gettoken();
                       print(item);
-                      var response = await http.post(
-                        // "http://192.168.137.1:3000/user/deletefromcart",
-                        "https://appcanteen.herokuapp.com/user/deletefromcart",
+                      var response = await http.post("https://appcanteen.herokuapp.com/user/deletefromcart",
                       body: jsonEncode(item),
                       headers: {"Authorization": "Bearer $token",
                       'Content-Type': 'application/json; charset=UTF-8',}
