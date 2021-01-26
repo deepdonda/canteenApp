@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   var item = items[index];
-                  var url ="https://appcanteen.herokuapp.com/backend/uploads/"+item['foodimage'];
+                  var url =item['foodimage'];
                   return foodCard(url, item['foodname'], item['foodprice'],item['foodqty'],item);
                 }
               )
