@@ -1,8 +1,5 @@
 import 'dart:convert';
-
 import 'package:canteen/navbar.dart';
-import 'package:canteen/services/AuthServices.dart';
-import 'package:canteen/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -225,6 +222,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 }
 
+// ignore: must_be_immutable
 class ButtonWidget extends StatefulWidget {
   var btnText = "";
   var onClick;
