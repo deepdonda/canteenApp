@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:canteen/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -8,10 +9,13 @@ FlutterSecureStorage storage = FlutterSecureStorage();
 void gettoken() async {
     token = await storage.read(key: "token");
          
-   // getdata();
+  /// getdata();
   }
+  
+  
 
 Widget CartCard(String img, String title, int price, int qty, var item) {
+  
   
   return Container(
     child: Card(
@@ -69,7 +73,8 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
                   child: IconButton(
                     onPressed: () async {
                                          
-                      gettoken();
+                      // ignore: await_only_futures
+                      await gettoken();
                       print(item);
                       var response = await http.post("https://appcanteen.herokuapp.com/user/deletefromcart",
                       body: jsonEncode(item),
@@ -88,7 +93,10 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
                             backgroundColor: Colors.orange,
                             textColor: Colors.white,
                             fontSize: 16.0);  
-                           // setState(() {}); 
+                           //gettoken();
+                          // getdata();
+                           
+                           
                                         
                       } else {
                         Fluttertoast.showToast(

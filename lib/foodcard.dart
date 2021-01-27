@@ -59,14 +59,15 @@ Widget foodCard(String img, String title, int price,int qty,var item) {
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Color(0xFF0A192F),
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 Expanded(
                   child: IconButton(
                     onPressed: () async {
-                      gettoken();
+                      // ignore: await_only_futures
+                      await gettoken();
                       print(item);
                       var response = await http.post("https://appcanteen.herokuapp.com/user/addtocart",
                       body: jsonEncode(

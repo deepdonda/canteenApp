@@ -12,7 +12,7 @@ var routes = <String, WidgetBuilder>{
   "/cart": (BuildContext context) => CartPage(),
 };
 
-var items, response, token, count;
+var items = [], response, token, count;
 
 class CartPage extends StatefulWidget {
   @override
@@ -28,8 +28,10 @@ class _CartPageState extends State<CartPage> {
   Future<Null> refreshList() async {
     // refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
-
+    //getdata();
     setState(() {
+      response=null;
+      items = [];
       getdata();
     });
 
@@ -39,8 +41,9 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
+    response=null;
     gettoken();
-    // getdata();
+    //getdata();
   }
 
   void gettoken() async {
@@ -66,6 +69,7 @@ class _CartPageState extends State<CartPage> {
           backgroundColor: Colors.orange,
           textColor: Colors.white,
           fontSize: 16.0);
+      setState(() {});
     }
   }
 
@@ -129,8 +133,8 @@ class _CartPageState extends State<CartPage> {
                 height: 20.0,
               ),
               Expanded(
-                child: items.length != 0
-                    ? response != null
+                child: response != null
+                    ? items.length > 0
                         ? GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -142,12 +146,12 @@ class _CartPageState extends State<CartPage> {
                               return CartCard(url, item['foodname'],
                                   item['foodprice'], item['foodqty'], item);
                             })
-                        : SplashScreen()
-                    : Image.asset(
-                        "assets/img/emptycart.png",
-                        width: 400,
-                        height: 500,
-                      ),
+                        : Image.asset(
+                            "assets/img/emptycart.png",
+                            width: 400,
+                            height: 500,
+                          )
+                    : Center(child: CircularProgressIndicator()),
               )
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:canteen/emptycart.dart';
 import 'package:canteen/login.dart';
 import 'package:canteen/main.dart';
+import 'package:canteen/myprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -35,7 +36,10 @@ class Navbar extends StatelessWidget {
       //Now let's Add the button for the Menu
       //and let's copy that and modify it
       ListTile(
-        onTap: () {},
+        onTap: ()async {
+           Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => MyProfilePage()));
+        },
         leading: Icon(
           Icons.person,
           color: Colors.black,
