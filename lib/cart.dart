@@ -67,7 +67,7 @@ class _CartPageState extends State<CartPage> {
       setState(() {});
     } else {
       Fluttertoast.showToast(
-          msg: "Something went wrong!",
+          msg: "Something went wrong! ",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.orange,
