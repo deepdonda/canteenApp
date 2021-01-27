@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter_socket_io/flutter_socket_io.dart';
+//import 'package:flutter_socket_io/socket_io_manager.dart';
 
 //import 'package:canteen/loading.dart';
 import 'package:canteen/navbar.dart';
@@ -11,25 +13,21 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => HomePage(),
-
 };
 
-
 void main() => runApp(MyApp());
-var items,response,token ;
+var items, response, token;
+
 class MyApp extends StatelessWidget {
-
-  
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
-      
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
@@ -45,27 +43,45 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FlutterSecureStorage storage = FlutterSecureStorage();
+  SocketIO socketIO;
   @override
   void initState() {
+    // socketIO = SocketIOManager().createSocketIO(
+    //   'https://appcanteen1.herokuapp.com','/'
+    // );
+    // socketIO.init();
+    // //Subscribe to an event to listen to
+    // socketIO.subscribe("foodcrudbyadmin", (jsonData) {
+    //   //Convert the JSON data received into a Map
+    //   var data = json.decode(jsonData);
+    //   print(data);
+    //   //this.setState(() => print(data));
+
+    // });
+    // //Connect to the socket
+    // socketIO.connect();
     super.initState();
     gettoken();
     // getdata();
   }
+
   void gettoken() async {
     token = await storage.read(key: "token");
     getdata();
+    setState(() {});
   }
+
   void getdata() async {
-    
-      // print(response);
-     response = await http.get(
+    // print(response);
+    response = await http.get(
       "https://appcanteen.herokuapp.com/user/getallfooditem",
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-       var val = json.decode(response.body);
-       items =  val["msg"];
+      var val = json.decode(response.body);
+      items = val["msg"];
       //  print(items);
+      setState(() {});
     } else {
       Fluttertoast.showToast(
           msg: "Something went wrong!",
@@ -74,37 +90,34 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.orange,
           textColor: Colors.white,
           fontSize: 16.0);
+      setState(() {});
     }
-    
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("FoodZone",style: TextStyle(fontWeight:FontWeight.bold,color: Colors.white)),
+        title: Text("FoodZone",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
       ),
       //Now we are going to open a new file
       // where we will create the layout of the Drawer
       drawer: Drawer(
-         child: Container(
-           decoration: BoxDecoration(color: Colors.white),
-          child: Navbar(),
-         )
-        
-      ),
+          child: Container(
+        decoration: BoxDecoration(color: Colors.white),
+        child: Navbar(),
+      )),
       // body: Center(child: Text("home page"),),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-  
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-               
               width: double.infinity,
               height: 50.0,
               decoration: BoxDecoration(
@@ -126,10 +139,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    onPressed: () {
-                      
-                      
-                    },
+                    onPressed: () {},
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
                       child: Icon(
@@ -148,23 +158,21 @@ class _HomePageState extends State<HomePage> {
             //Now let's build the food menu
             //I'm going to create a custom widget
             Expanded(
-              child: response != null
-              ? GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.68),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  var item = items[index];
-                  var url =item['foodimage'];
-                  return foodCard(url, item['foodname'], item['foodprice'],item['foodqty'],item);
-                }
-              )
-              :SplashScreen()
-            )
+                child: response != null
+                    ? GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: 0.68),
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          var item = items[index];
+                          var url = item['foodimage'];
+                          return foodCard(url, item['foodname'],
+                              item['foodprice'], item['foodqty'], item);
+                        })
+                    : Center(child: CircularProgressIndicator()))
           ],
         ),
       ),
-
-      
     );
   }
 }
