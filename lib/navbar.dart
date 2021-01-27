@@ -1,4 +1,3 @@
-import 'package:canteen/emptycart.dart';
 import 'package:canteen/login.dart';
 import 'package:canteen/main.dart';
 import 'package:canteen/myprofile.dart';
@@ -38,6 +37,17 @@ class Navbar extends StatelessWidget {
       ListTile(
         onTap: ()async {
            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => HomePage()));
+        },
+        leading: Icon(
+          Icons.home,
+          color: Colors.black,
+        ),
+        title: Text("Your Home"),
+      ),
+      ListTile(
+        onTap: ()async {
+           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => MyProfilePage()));
         },
         leading: Icon(
@@ -58,17 +68,7 @@ class Navbar extends StatelessWidget {
         ),
         title: Text("Your Cart"),
       ),
-       ListTile(
-        onTap: ()async {
-           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => HomePage()));
-        },
-        leading: Icon(
-          Icons.home,
-          color: Colors.black,
-        ),
-        title: Text("Your Home"),
-      ),
+       
 
       ListTile(
         onTap: () async {

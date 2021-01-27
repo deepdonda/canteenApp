@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:canteen/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +13,7 @@ void gettoken() async {
   
   
 
+// ignore: non_constant_identifier_names
 Widget CartCard(String img, String title, int price, int qty, var item) {
   
   

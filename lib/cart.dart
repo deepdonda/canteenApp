@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:canteen/cartcard.dart';
 import 'package:canteen/navbar.dart';
-import 'package:canteen/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +11,7 @@ var routes = <String, WidgetBuilder>{
   "/cart": (BuildContext context) => CartPage(),
 };
 
-var items = [], response, token, count;
+var items = [], response, token, count,val=[];
 
 class CartPage extends StatefulWidget {
   @override
@@ -58,8 +57,13 @@ class _CartPageState extends State<CartPage> {
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      var val = json.decode(response.body);
-      items = val[0]['items'];
+      val = json.decode(response.body);
+      //print(val);
+      //print(val.length);
+      if(val.length>0)
+      {
+        items = val[0]['items'];
+      }
       setState(() {});
     } else {
       Fluttertoast.showToast(
@@ -134,7 +138,7 @@ class _CartPageState extends State<CartPage> {
               ),
               Expanded(
                 child: response != null
-                    ? items.length > 0
+                    ? val.length > 0
                         ? GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
