@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:canteen/cartcard.dart';
 import 'package:canteen/navbar.dart';
+import 'package:canteen/widgets/btn_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +12,7 @@ var routes = <String, WidgetBuilder>{
   "/cart": (BuildContext context) => CartPage(),
 };
 
-var items = [], response, token, count,val=[];
+var items = [], response, token, count, val = [], total = 0;
 
 class CartPage extends StatefulWidget {
   @override
@@ -29,8 +30,10 @@ class _CartPageState extends State<CartPage> {
     await Future.delayed(Duration(seconds: 2));
     //getdata();
     setState(() {
-      response=null;
+      response = null;
+      val = [];
       items = [];
+      total = 0;
       getdata();
     });
 
@@ -40,7 +43,7 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
-    response=null;
+    response = null;
     gettoken();
     //getdata();
   }
@@ -60,14 +63,14 @@ class _CartPageState extends State<CartPage> {
       val = json.decode(response.body);
       //print(val);
       //print(val.length);
-      if(val.length>0)
-      {
+      if (val.length > 0) {
         items = val[0]['items'];
+        total = val[0]['total'];
       }
       setState(() {});
     } else {
       Fluttertoast.showToast(
-          msg: "Something went wrong! ",
+          msg: "Something went wrong!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.orange,
@@ -156,7 +159,36 @@ class _CartPageState extends State<CartPage> {
                             height: 500,
                           )
                     : Center(child: CircularProgressIndicator()),
-              )
+              ),
+              response != null
+                  ? val.length > 0
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Center(
+                              child: Text(
+                                "Total:" + total.toString() + " Rs",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: Color(0xFF0A192F),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Center(
+                                child: ButtonWidget(
+                              onClick: () {},
+                              btnText: "Checkout",
+                            )),
+                          ],
+                        )
+                      : Center()
+                  : Center()
             ],
           ),
         ),
