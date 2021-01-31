@@ -1,6 +1,8 @@
+import 'package:canteen/forgotpassword.dart';
 import 'package:canteen/main.dart';
 import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/widgets/header_container.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/register.dart';
 import 'package:canteen/widgets/btn_widget.dart';
@@ -81,12 +83,20 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             }),
                         Container(
-                          margin: EdgeInsets.only(top: 20, bottom: 20),
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            "Forgot Password?",
-                          ),
-                        ),
+                            margin: EdgeInsets.only(top: 20, bottom: 20),
+                            alignment: Alignment.centerRight,
+                            child: RichText(
+                              text: TextSpan(
+                                 
+                                  text: "Forgot Password?",
+                                  style:TextStyle(color:Colors.black),
+                                  recognizer: TapGestureRecognizer()..onTap = () async {
+                                     Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => forgotpasswordPage()));
+                                    }),
+                            )),
                         Expanded(
                           child: Center(
                             child: ButtonWidget(
@@ -112,8 +122,11 @@ class _LoginPageState extends State<LoginPage> {
                                             textColor: Colors.white,
                                             fontSize: 16.0);
                                         setState(() {
-                                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                          builder: (BuildContext context) =>HomePage()));
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          HomePage()));
                                         });
                                       } else {
                                         print("YOU CAN NOT LOGIN");
@@ -125,7 +138,6 @@ class _LoginPageState extends State<LoginPage> {
                                             textColor: Colors.white,
                                             fontSize: 16.0);
                                         setState(() {
-
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -178,6 +190,10 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        
                       ],
                     ),
                   )),
