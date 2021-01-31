@@ -50,6 +50,24 @@ class Authservices {
           fontSize: 16.0);
     }
   }
+  forgotpassword(email)async
+  {
+    try {
+      return await dio.post("https://appcanteen.herokuapp.com/reset-password-done", data: {
+        "email": email,
+       
+      });
+    } on DioError catch (e) {
+      print(e.response);
+      Fluttertoast.showToast(
+          msg: "Something went wrong!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.orange,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
 
   getfood() async {
     String token = await storage.read(key: "token");
