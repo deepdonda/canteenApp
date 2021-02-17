@@ -1,26 +1,6 @@
 import 'package:canteen/navbar.dart';
 import 'package:flutter/material.dart';
 
-// class ScreenConfig {
-//   static double deviceWidth;
-//   static double deviceHeight;
-//   static double designHeight = 1300;
-//   static double designWidth = 600;
-//   static init(BuildContext context) {
-//     deviceWidth = MediaQuery.of(context).size.width;
-//     deviceHeight = MediaQuery.of(context).size.height;
-//   }
-
-//   // Designer user 1300 device height,
-//   // so I have to normalize to the device height
-//   static double getProportionalHeight(height) {
-//     return (height / designHeight) * deviceHeight;
-//   }
-
-//   static double getProportionalWidth(width) {
-//     return (width / designWidth) * deviceWidth;
-//   }
-// }
 
 // Colors
 const iPrimarryColor = Color(0xFFF9FCFF);
@@ -49,6 +29,7 @@ const demoData = [
 ];
 
 
+// ignore: must_be_immutable
 class Invoice extends StatelessWidget {
   var todo;
   Invoice({Key key, @required this.todo}) : super(key: key);
@@ -59,8 +40,6 @@ class Invoice extends StatelessWidget {
   Widget build(BuildContext context) {
      print(todo);
      a=todo;
-
-    //ScreenConfig.init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("FoodZone",
@@ -68,14 +47,11 @@ class Invoice extends StatelessWidget {
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      //Now we are going to open a new file
-      // where we will create the layout of the Drawer
       drawer: Drawer(
           child: Container(
         decoration: BoxDecoration(color: Colors.white),
         child: Navbar(),
       )),
-      // body: Center(child: Text("home page"),),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         child: Column(
@@ -91,8 +67,6 @@ class Invoice extends StatelessWidget {
                 InvoiceBody(),
               ],
             )
-            //Now let's build the food menu
-            //I'm going to create a custom widget
           ],
         ),
       ),
@@ -102,17 +76,17 @@ class Invoice extends StatelessWidget {
   Widget invoiceHeader() {
     return Container(
       width: 600,
-      //ScreenConfig.deviceWidth,
+
       height: 300,
-      //ScreenConfig.getProportionalHeight(374),
+
       color: Color(0xFF4D4F52),
       padding: EdgeInsets.only(
         top: 10,
-        // ScreenConfig.getProportionalHeight(50),
+     
         left: 20,
-        //ScreenConfig.getProportionalWidth(40),
+       
         right: 20,
-        // ScreenConfig.getProportionalWidth(40)
+       
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,31 +99,31 @@ class Invoice extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 40,
-                  //ScreenConfig.getProportionalHeight(56)
+                  
                 ),
               ),
               SizedBox(
                 height: 10,
-                // ScreenConfig.getProportionalHeight(20),
+               
               ),
               topHeaderText(todo["_id"]),
               SizedBox(
                 height: 10,
-                //ScreenConfig.getProportionalHeight(20),
+                
               ),
-              // TODO: form get actual date and format it accondingly
+              
               topHeaderText(todo["orderdate"]),
               SizedBox(
                 height: 10,
-                //ScreenConfig.getProportionalHeight(20),
+               
               ),
-              // TODO: form get actual date and format it accondingly
+             
               topHeaderText(todo["status"]),
             ],
           ),
           SizedBox(
             height: 40,
-            //ScreenConfig.getProportionalHeight(20),
+           
           ),
           Column(
             children: [
@@ -159,7 +133,7 @@ class Invoice extends StatelessWidget {
                   Image.network(
                     "https://raw.githubusercontent.com/developFlexUI/invoice-flutter-ui/main/assets/icons/icons8-receipt.png",
                     height: 50,
-                    //ScreenConfig.getProportionalHeight(78),
+              
                   ),
                   addressColumn()
                 ],
@@ -198,7 +172,7 @@ class Invoice extends StatelessWidget {
         style: TextStyle(
           color: Colors.white.withOpacity(0.6),
           fontSize: 15,
-          // ScreenConfig.getProportionalHeight(23)
+
         ));
   }
 }
@@ -209,34 +183,28 @@ class InvoiceBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var totalAmount = 64;
     double height = 300;
-    //ScreenConfig.deviceHeight - ScreenConfig.getProportionalHeight(374);
+
     return Container(
       height: height,
       width: 600,
       padding: EdgeInsets.only(
         top: 10,
-        // ScreenConfig.getProportionalHeight(50),
+
         left: 0,
-        //ScreenConfig.getProportionalWidth(40),
+
         right: 0,
-        // ScreenConfig.getProportionalWidth(40)
       ),
-      // padding: EdgeInsets.symmetric(
-      //     horizontal: 40,
-      //    // ScreenConfig.getProportionalWidth(40)
-      //    ),
+     
       color: iPrimarryColor,
       child: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
               height: 10,
-              //ScreenConfig.getProportionalHeight(27),
             ),
             addItemAction(),
             SizedBox(
               height: 20,
-              //ScreenConfig.getProportionalHeight(40),
             ),
             Column(
                 children: List.generate(
@@ -250,14 +218,12 @@ class InvoiceBody extends StatelessWidget {
                       a["items"][index]["foodname"]),
                   SizedBox(
                     height: 20,
-                    //ScreenConfig.getProportionalHeight(24),
                   )
                 ],
               ),
             )),
             invoiceTotal(totalAmount),
             SizedBox(height: 20
-                // ScreenConfig.getProportionalHeight(56),
                 ),
             FlatButton(
               color: iAccentColor,
@@ -265,20 +231,17 @@ class InvoiceBody extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15)),
               child: SizedBox(
                 height: 50,
-                //ScreenConfig.getProportionalHeight(80),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.file_download),
                     SizedBox(
                       width: 21,
-                      //ScreenConfig.getProportionalWidth(21),
                     ),
                     Text(
                       "Download now",
                       style: TextStyle(
                           fontSize: 20,
-                          // ScreenConfig.getProportionalHeight(27),
                           fontWeight: FontWeight.bold),
                     )
                   ],
@@ -304,12 +267,10 @@ class InvoiceBody extends StatelessWidget {
                 color: Colors.black.withOpacity(0.6),
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
-                //ScreenConfig.getProportionalHeight(32)
               ),
             ),
             SizedBox(
               width: 50,
-              //ScreenConfig.getProportionalWidth(50),
             ),
             Text(
               a["total"].toString(),
@@ -317,7 +278,6 @@ class InvoiceBody extends StatelessWidget {
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
-                //ScreenConfig.getProportionalHeight(32)
               ),
             )
           ],
@@ -333,10 +293,8 @@ class InvoiceBody extends StatelessWidget {
     return Container(
       height: 50,
       width: 600,
-      //ScreenConfig.getProportionalHeight(170),
       padding: EdgeInsets.symmetric(
         horizontal: 27,
-        // ScreenConfig.getProportionalWidth(27)
       ),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -357,10 +315,6 @@ class InvoiceBody extends StatelessWidget {
                 color: Colors.black.withOpacity(0.6),
                 fontWeight: FontWeight.bold),
           ),
-          // Image.network(
-          //     "https://storage.googleapis.com/canteen-assets/1-25-2021-19-1-56-6.jpg",
-          //     width: 10,
-          //     ),
           Text(
             "\$$price",
             style: TextStyle(
@@ -370,7 +324,6 @@ class InvoiceBody extends StatelessWidget {
           ),
           SizedBox(
             width: 100,
-            //ScreenConfig.getProportionalWidth(145),
             child: Text(
               itemDesc,
               style: TextStyle(color: Colors.black),
@@ -391,10 +344,10 @@ class InvoiceBody extends StatelessWidget {
         Text("Items",
             style: TextStyle(
                 color: Colors.black,
-                fontSize: 18 //ScreenConfig.getProportionalHeight(30)
+                fontSize: 18 
                 )),
         SizedBox(
-          width: 50, //ScreenConfig.getProportionalWidth(50),
+          width: 50, 
         ),
         FlatButton(
           color: iAccentColor2,
