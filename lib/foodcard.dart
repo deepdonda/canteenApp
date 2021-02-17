@@ -13,8 +13,9 @@ void gettoken() async {
          
   }
 
-Widget foodCard(String img, String title, int price,int qty,var item) {
+Widget foodCard(String img, String title, int price,String qty,var item) {
   return Container(
+    
     child: Card(
       child: Padding(
         padding: const EdgeInsets.only(top:8,left: 8,right: 8),

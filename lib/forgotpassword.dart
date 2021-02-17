@@ -8,13 +8,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'main.dart';
+//import 'main.dart';
 
+// ignore: camel_case_types
 class forgotpasswordPage extends StatefulWidget {
   @override
   _forgotpasswordPageState createState() => _forgotpasswordPageState();
 }
 
+// ignore: camel_case_types
 class _forgotpasswordPageState extends State<forgotpasswordPage> {
   var email, token;
   final _formKey = GlobalKey<FormState>();

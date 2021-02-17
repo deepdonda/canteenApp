@@ -19,7 +19,7 @@ var routes = <String, WidgetBuilder>{
 };
 
 void main() => runApp(MyApp());
-var items, response, token;
+var items, response, token,val;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -62,13 +62,26 @@ class _HomePageState extends State<HomePage> {
     // socketIO.connect();
     super.initState();
     gettoken();
-    // getdata();
+    //getdata();
+  }
+  Future<Null> refreshList() async {
+    // refreshKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 2));
+    //getdata();
+    setState(() {
+      response = null;
+      val = [];
+      items = [];
+      getdata();
+    });
+
+    return null;
   }
 
   void gettoken() async {
     token = await storage.read(key: "token");
     getdata();
-    setState(() {});
+    //RsetState(() {});
   }
 
   void getdata() async {
@@ -78,9 +91,10 @@ class _HomePageState extends State<HomePage> {
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      var val = json.decode(response.body);
+      val = json.decode(response.body);
+     // print(val);
       items = val["msg"];
-      //  print(items);
+     // print(items);
       setState(() {});
     } else {
       Fluttertoast.showToast(
@@ -111,67 +125,75 @@ class _HomePageState extends State<HomePage> {
         child: Navbar(),
       )),
       // body: Center(child: Text("home page"),),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 50.0,
-              decoration: BoxDecoration(
-                color: Color(0x55d2d2d2),
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search... ",
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 20.0),
-                    ),
-                  )),
-                  RaisedButton(
-                    elevation: 3.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.white,
+      body:RefreshIndicator (
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 50.0,
+                decoration: BoxDecoration(
+                  color: Color(0x55d2d2d2),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "Search... ",
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 20.0),
                       ),
+                    )),
+                    RaisedButton(
+                      elevation: 3.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      onPressed: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                      ),
+                      color: Colors.orange,
                     ),
-                    color: Colors.orange,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            //Now let's build the food menu
-            //I'm going to create a custom widget
-            Expanded(
-                child: response != null
-                    ? GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, childAspectRatio: 0.68),
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          var item = items[index];
-                          var url = item['foodimage'];
-                          return foodCard(url, item['foodname'],
-                              item['foodprice'], item['foodqty'], item);
-                        })
-                    : Center(child: CircularProgressIndicator()))
-          ],
+              SizedBox(
+                height: 20.0,
+              ),
+              //Now let's build the food menu
+              //I'm going to create a custom widget
+              Expanded(
+                  child: response != null
+                      ? GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, childAspectRatio: 0.68),
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            var item = items[index];
+                            var url = item['foodimage'];
+                            String qty="" + item['foodqty'].toString();
+                            if(item['foodqty']<0)
+                            {
+                                qty="available";
+                            }
+                            return foodCard(url, item['foodname'],
+                                item['foodprice'], qty, item);
+                          })
+                      : Center(child: CircularProgressIndicator()))
+            ],
+          ),
         ),
+         onRefresh: refreshList,
       ),
     );
   }
