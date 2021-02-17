@@ -1,6 +1,7 @@
 import 'package:canteen/login.dart';
 import 'package:canteen/main.dart';
 import 'package:canteen/myprofile.dart';
+import 'package:canteen/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -35,9 +36,9 @@ class Navbar extends StatelessWidget {
       //Now let's Add the button for the Menu
       //and let's copy that and modify it
       ListTile(
-        onTap: ()async {
-           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => HomePage()));
+        onTap: () async {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
         },
         leading: Icon(
           Icons.home,
@@ -46,8 +47,30 @@ class Navbar extends StatelessWidget {
         title: Text("Your Home"),
       ),
       ListTile(
-        onTap: ()async {
-           Navigator.of(context).pushReplacement(MaterialPageRoute(
+        onTap: () async {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (BuildContext context) => CartPage()));
+        },
+        leading: Icon(
+          Icons.shopping_cart,
+          color: Colors.black,
+        ),
+        title: Text("Your Cart"),
+      ),
+       ListTile(
+        onTap: () async {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => OrderPage()));
+        },
+        leading: Icon(
+          Icons.book_outlined,
+          color: Colors.black,
+        ),
+        title: Text("Your Orders"),
+      ),
+      ListTile(
+        onTap: () async {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => MyProfilePage()));
         },
         leading: Icon(
@@ -56,20 +79,6 @@ class Navbar extends StatelessWidget {
         ),
         title: Text("Your Profile"),
       ),
-
-      ListTile(
-        onTap: ()async {
-           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => CartPage()));
-        },
-        leading: Icon(
-          Icons.shopping_cart,
-          color: Colors.black,
-        ),
-        title: Text("Your Cart"),
-      ),
-       
-
       ListTile(
         onTap: () async {
           await storage.delete(key: "token");

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:canteen/cartcard.dart';
 import 'package:canteen/navbar.dart';
+import 'package:canteen/order.dart';
 import 'package:canteen/widgets/btn_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,9 +22,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   FlutterSecureStorage storage = FlutterSecureStorage();
-  a() async {
-    setState(() {});
-  }
+  
 
   Future<Null> refreshList() async {
     // refreshKey.currentState?.show(atTop: false);
@@ -182,7 +181,53 @@ class _CartPageState extends State<CartPage> {
                             ),
                             Center(
                                 child: ButtonWidget(
-                              onClick: () {},
+                              onClick: () async {
+                                gettoken();
+
+                                var response = await http.post(
+                                    "https://appcanteen.herokuapp.com/user/placeorder",
+                                    body: jsonEncode(items),
+                                    headers: {
+                                      "Authorization": "Bearer $token",
+                                      'Content-Type':
+                                          'application/json; charset=UTF-8',
+                                    });
+                                //setState(() {});
+
+                                if (response.statusCode == 200 ||
+                                    response.statusCode == 201) {
+                                  var val = json.decode(response.body);
+                                  Fluttertoast.showToast(
+                                      msg: val["msg"],
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.orange,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                  //gettoken();
+                                  //getdata();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OrderPage()));
+
+                                  setState(() {});
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Something went wrong!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.orange,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                }
+                                Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OrderPage()));
+                                          setState(() {});
+
+                              },
                               btnText: "Checkout",
                             )),
                           ],
