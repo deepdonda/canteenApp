@@ -1,3 +1,4 @@
+import 'package:canteen/feedback.dart';
 import 'package:canteen/login.dart';
 import 'package:canteen/main.dart';
 import 'package:canteen/myprofile.dart';
@@ -81,6 +82,17 @@ class Navbar extends StatelessWidget {
       ),
       ListTile(
         onTap: () async {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => FeedBackPage()));
+        },
+        leading: Icon(
+          Icons.feedback_outlined,
+          color: Colors.black,
+        ),
+        title: Text("Add FeedBack"),
+      ),
+      ListTile(
+        onTap: () async {
           await storage.delete(key: "token");
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => LoginPage()));
@@ -91,6 +103,7 @@ class Navbar extends StatelessWidget {
         ),
         title: Text("Logout"),
       ),
+      
     ]);
   }
 }
