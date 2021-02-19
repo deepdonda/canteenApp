@@ -18,7 +18,6 @@ class _setpasswordPageState extends State<setpasswordPage> {
   var email, password, otp;
   var token, temp;
   final storage = new FlutterSecureStorage();
-  
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -69,6 +68,17 @@ class _setpasswordPageState extends State<setpasswordPage> {
                         onChanged: (val) {
                           otp = val;
                         },
+                        validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Enter otp';
+                            } else if (RegExp(
+                                    r'^[0-9]{4}$')
+                                .hasMatch(value)) {
+                              return null;
+                            } else {
+                              return 'Enter valid otp';
+                            }
+                          }
                       ),
                       TextFormField(
                           decoration: InputDecoration(
@@ -96,16 +106,19 @@ class _setpasswordPageState extends State<setpasswordPage> {
                       Expanded(
                         child: Center(
                           child: ButtonWidget1(
-                            btnText: "Set Password",
+                            btnText: "Reset Password",
                             onClick: () async {
                               if (_formKey.currentState.validate()) {
                                 // ignore: await_only_futures
-                               
+
                                 var response = await http.post(
                                     "https://appcanteen.herokuapp.com/reset-password-done",
-                                    body: jsonEncode({"email": email,"otp":otp,"p1":password}),
+                                    body: jsonEncode({
+                                      "email": email,
+                                      "otp": otp,
+                                      "p1": password
+                                    }),
                                     headers: {
-                                    
                                       'Content-Type':
                                           'application/json; charset=UTF-8',
                                     });
@@ -113,19 +126,31 @@ class _setpasswordPageState extends State<setpasswordPage> {
                                 if (response.statusCode == 200 ||
                                     response.statusCode == 201) {
                                   var val = json.decode(response.body);
-                                  Fluttertoast.showToast(
-                                      msg: val["message"],
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      backgroundColor: Colors.orange,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                  setState(() {
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                LoginPage()));
-                                  });
+                                  if (val["message"] != null) {
+                                    Fluttertoast.showToast(
+                                        msg: val["message"],
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.greenAccent,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                    setState(() {
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  LoginPage()));
+                                    });
+                                  }
+                                  if (val["msg"] != null) {
+                                    Fluttertoast.showToast(
+                                        msg: val["msg"],
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.orange,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                    setState(() {});
+                                  }
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Something went wrong!",
@@ -162,11 +187,10 @@ class _setpasswordPageState extends State<setpasswordPage> {
                         child: Center(
                           child: ButtonWidget(
                             onClick: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
-                              );
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          LoginPage()));
                             },
                             btnText: "Login",
                           ),
@@ -183,8 +207,6 @@ class _setpasswordPageState extends State<setpasswordPage> {
     );
   }
 }
-
-
 
 //////////////////////////
 // ignore: must_be_immutable

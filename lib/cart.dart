@@ -206,10 +206,11 @@ class _CartPageState extends State<CartPage> {
                                       fontSize: 16.0);
                                   //gettoken();
                                   //getdata();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => OrderPage()));
+                                    Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        OrderPage()));
 
                                   setState(() {});
                                 } else {

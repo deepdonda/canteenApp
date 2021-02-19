@@ -68,7 +68,7 @@ class _forgotpasswordPageState extends State<forgotpasswordPage> {
                         ),
                         Expanded(
                           child: Center(
-                            child: ButtonWidget1(
+                            child: ButtonWidget(
                               onClick: () async {
                                 if (_formKey.currentState.validate()) {
                                   // ignore: await_only_futures
@@ -84,19 +84,33 @@ class _forgotpasswordPageState extends State<forgotpasswordPage> {
                                   if (response.statusCode == 200 ||
                                       response.statusCode == 201) {
                                     var val = json.decode(response.body);
-                                    Fluttertoast.showToast(
-                                        msg: val["message"],
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: Colors.orange,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0);
-                                    setState(() {
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  setpasswordPage()));
-                                    });
+                                    if (val["message"] != null) {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "otp has been send please check your mailbox",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.greenAccent,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                      setState(() {
+                                        Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        setpasswordPage()));
+                                      });
+                                    }
+                                    if (val["msg"] != null) {
+                                      Fluttertoast.showToast(
+                                          msg: val["msg"],
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.orange,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                      setState(() {});
+                                    }
                                   } else {
                                     Fluttertoast.showToast(
                                         msg: "Something went wrong!",
@@ -130,11 +144,10 @@ class _forgotpasswordPageState extends State<forgotpasswordPage> {
                           child: Center(
                             child: ButtonWidget(
                               onClick: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
-                                );
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            LoginPage()));
                               },
                               btnText: "Login",
                             ),
@@ -153,38 +166,36 @@ class _forgotpasswordPageState extends State<forgotpasswordPage> {
   }
 }
 
-
 /////////////////
-// ignore: must_be_immutable
-class ButtonWidget1 extends StatefulWidget {
-  var btnText = "";
-  var onClick;
-  ButtonWidget1({this.btnText, this.onClick});
+// // ignore: must_be_immutable
+// class ButtonWidget1 extends StatefulWidget {
+//   var btnText = "";
+//   var onClick;
+//   ButtonWidget1({this.btnText, this.onClick});
 
-  @override
-  _ButtonWidgetState1 createState() => _ButtonWidgetState1();
-}
+//   @override
+//   _ButtonWidgetState1 createState() => _ButtonWidgetState1();
+// }
 
-class _ButtonWidgetState1 extends State<ButtonWidget1> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onClick,
-      child: Container(
-        height: 40,
-        width: 200,
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(10),
-          color: Colors.orangeAccent,
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          widget.btnText,
-          style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-}
-
+// class _ButtonWidgetState1 extends State<ButtonWidget1> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       onTap: widget.onClick,
+//       child: Container(
+//         height: 40,
+//         width: 100,
+//         decoration: new BoxDecoration(
+//           borderRadius: new BorderRadius.circular(10),
+//           color: Colors.orangeAccent,
+//         ),
+//         alignment: Alignment.center,
+//         child: Text(
+//           widget.btnText,
+//           style: TextStyle(
+//               fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+//         ),
+//       ),
+//     );
+//   }
+// }
