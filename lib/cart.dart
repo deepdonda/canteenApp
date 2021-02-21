@@ -197,7 +197,9 @@ class _CartPageState extends State<CartPage> {
                                 if (response.statusCode == 200 ||
                                     response.statusCode == 201) {
                                   var val = json.decode(response.body);
-                                  Fluttertoast.showToast(
+                                  if(val["msg"] != null)
+                                  {
+                                      Fluttertoast.showToast(
                                       msg: val["msg"],
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
@@ -212,7 +214,20 @@ class _CartPageState extends State<CartPage> {
                                                     (BuildContext context) =>
                                                         OrderPage()));
 
-                                  setState(() {});
+                                    setState(() {});
+                                  }
+                                  else if(val["errormsg"] != null)
+                                  {
+                                      Fluttertoast.showToast(
+                                      msg: val["errormsg"],
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.orange,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                       setState(() {});
+                                  }
+                                  
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Something went wrong!",
@@ -222,11 +237,11 @@ class _CartPageState extends State<CartPage> {
                                       textColor: Colors.white,
                                       fontSize: 16.0);
                                 }
-                                Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => OrderPage()));
-                                          setState(() {});
+                                // Navigator.push(
+                                //       context,
+                                //       MaterialPageRoute(
+                                //           builder: (context) => OrderPage()));
+                                //           setState(() {});
 
                               },
                               btnText: "Checkout",
