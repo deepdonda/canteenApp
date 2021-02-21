@@ -113,7 +113,7 @@ class _OrderPageState extends State<OrderPage> {
                 child: response != null
                     ? GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1, childAspectRatio: 2.7),
+                            crossAxisCount: 1, childAspectRatio: 2.6),
                         itemCount: items.length,
                         itemBuilder: (context, index) {
                           var item = items[index];
@@ -124,6 +124,12 @@ class _OrderPageState extends State<OrderPage> {
                           int colors = 0000000;
                           if (item["status"] == "placed") {
                             colors = 0xFFB71C1C;
+                          }
+                          else if (item["status"] == "preparing") {
+                            colors = 0xFFFF9800;
+                          }
+                          else if (item["status"] == "completed") {
+                            colors = 0xFF4CAF50;
                           }
 
                           return orderCard(context, colors, item);
