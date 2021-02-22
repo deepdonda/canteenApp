@@ -1,16 +1,11 @@
 import 'dart:convert';
-import 'package:flutter_socket_io/flutter_socket_io.dart';
-//import 'package:flutter_socket_io/socket_io_manager.dart';
-
-//import 'package:canteen/loading.dart';
 import 'package:canteen/navbar.dart';
-// import 'package:canteen/services/AuthServices.dart';
 import 'package:canteen/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/foodcard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -43,26 +38,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FlutterSecureStorage storage = FlutterSecureStorage();
-  SocketIO socketIO;
+  IO.Socket socket;
+
   @override
   void initState() {
-    // socketIO = SocketIOManager().createSocketIO(
-    //   'https://appcanteen1.herokuapp.com','/'
-    // );
-    // socketIO.init();
-    // //Subscribe to an event to listen to
-    // socketIO.subscribe("foodcrudbyadmin", (jsonData) {
-    //   //Convert the JSON data received into a Map
-    //   var data = json.decode(jsonData);
-    //   print(data);
-    //   //this.setState(() => print(data));
-
-    // });
-    // //Connect to the socket
-    // socketIO.connect();
+    
     super.initState();
+   // establishConnection();
     gettoken();
-    //getdata();
+    
+    
   }
   Future<Null> refreshList() async {
     // refreshKey.currentState?.show(atTop: false);
@@ -79,13 +64,44 @@ class _HomePageState extends State<HomePage> {
   }
 
   void gettoken() async {
+    
     token = await storage.read(key: "token");
     getdata();
+   
+
     //RsetState(() {});
   }
-
+  void establishConnection() async {
+    print("");
+    try {
+      socket = IO.io("https://appcanteen.herokuapp.com/", <String, dynamic>{
+        'transports': ['websocket'],
+        'autoConnect': false,
+      });
+      socket.connect();
+      print("hello");
+      socket.onConnect((_) {
+        print('connected');
+        
+      });
+      //print("");
+      socket.on('foodcrudbyadmin', (data) {
+        print("here");
+        print(data);
+        //var json = jsonDecode(data);
+        setState(() {   
+          response = null;
+      val = [];
+      items = [];
+      getdata();      
+        });
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
   void getdata() async {
-    // print(response);
+    
     response = await http.get(
       "https://appcanteen.herokuapp.com/user/getallfooditem",
       headers: {"Authorization": "Bearer $token"},

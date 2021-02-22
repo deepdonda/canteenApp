@@ -1,6 +1,15 @@
+//import 'package:canteen/cart.dart';
+import 'dart:convert';
+
+//import 'package:canteen/cart.dart';
+import 'package:canteen/pickUp.dart';
+import 'package:http/http.dart' as http;
 import 'package:canteen/navbar.dart';
 import 'package:flutter/material.dart';
-
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // Colors
 const iPrimarryColor = Color(0xFFF9FCFF);
@@ -28,18 +37,15 @@ const demoData = [
   }
 ];
 
-
 // ignore: must_be_immutable
 class Invoice extends StatelessWidget {
   var todo;
   Invoice({Key key, @required this.todo}) : super(key: key);
 
-  
- 
   @override
   Widget build(BuildContext context) {
-     print(todo);
-     a=todo;
+    //print(todo);
+    a = todo;
     return Scaffold(
       appBar: AppBar(
         title: Text("FoodZone",
@@ -76,17 +82,12 @@ class Invoice extends StatelessWidget {
   Widget invoiceHeader() {
     return Container(
       width: 600,
-
       height: 300,
-
       color: Color(0xFF4D4F52),
       padding: EdgeInsets.only(
         top: 10,
-     
         left: 20,
-       
         right: 20,
-       
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,31 +100,31 @@ class Invoice extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 40,
-                  
                 ),
               ),
               SizedBox(
-                height: 10,
-               
+                height: 6,
               ),
               topHeaderText(todo["_id"]),
               SizedBox(
-                height: 10,
-                
+                height: 6,
               ),
-              
+
               topHeaderText(todo["orderdate"]),
               SizedBox(
-                height: 10,
-               
+                height: 6,
               ),
-             
+
               topHeaderText(todo["status"]),
+              SizedBox(
+                height: 6,
+              ),
+              topHeaderText(todo["paymentstatus"]),
+              //paymentstatus
             ],
           ),
           SizedBox(
-            height: 40,
-           
+            height: 20,
           ),
           Column(
             children: [
@@ -133,7 +134,6 @@ class Invoice extends StatelessWidget {
                   Image.network(
                     "https://raw.githubusercontent.com/developFlexUI/invoice-flutter-ui/main/assets/icons/icons8-receipt.png",
                     height: 50,
-              
                   ),
                   addressColumn()
                 ],
@@ -172,13 +172,52 @@ class Invoice extends StatelessWidget {
         style: TextStyle(
           color: Colors.white.withOpacity(0.6),
           fontSize: 15,
-
         ));
   }
 }
 
 ////////////////
-class InvoiceBody extends StatelessWidget {
+class InvoiceBody extends StatefulWidget {
+  @override
+  _InvoiceBodyState createState() => _InvoiceBodyState();
+}
+
+class _InvoiceBodyState extends State<InvoiceBody> {
+  String result = "Scan";
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  var token;
+  void gettoken() async {
+    token = await storage.read(key: "token");
+    //getdata();
+  }
+
+  Future _scanQR() async {
+    try {
+      String qrResult = await BarcodeScanner.scan();
+      setState(() {
+        result = qrResult;
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          result = "Camera permission was denied";
+        });
+      } else {
+        setState(() {
+          result = "Unknown Error $ex";
+        });
+      }
+    } on FormatException {
+      setState(() {
+        result = "You pressed the back button before scanning anything";
+      });
+    } catch (ex) {
+      setState(() {
+        result = "Unknown Error $ex";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var totalAmount = 64;
@@ -189,12 +228,9 @@ class InvoiceBody extends StatelessWidget {
       width: 600,
       padding: EdgeInsets.only(
         top: 10,
-
         left: 0,
-
         right: 0,
       ),
-     
       color: iPrimarryColor,
       child: SingleChildScrollView(
         child: Column(
@@ -217,38 +253,98 @@ class InvoiceBody extends StatelessWidget {
                       a["items"][index]["foodprice"],
                       a["items"][index]["foodname"]),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   )
                 ],
               ),
             )),
             invoiceTotal(totalAmount),
-            SizedBox(height: 20
-                ),
-            FlatButton(
-              color: iAccentColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: SizedBox(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.file_download),
-                    SizedBox(
-                      width: 21,
+            SizedBox(height: 20),
+            a["status"] != "pick up"
+                ? FlatButton(
+                    color: iAccentColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    child: SizedBox(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.camera_alt),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Scan", //////////////////////////
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Download now",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-              ),
-              onPressed: () {},
-            )
+                    onPressed: () async {
+                      //////////////////////////////////////////////////////////////////////////////////
+                      await _scanQR();
+                      if (result == a["_id"]) {
+                        // ignore: await_only_futures
+                        await gettoken();
+
+                        var response = await http.post(
+                            "https://appcanteen.herokuapp.com/user/qrcode",
+                            body: jsonEncode({'id': result}),
+                            headers: {
+                              "Authorization": "Bearer $token",
+                              'Content-Type': 'application/json; charset=UTF-8',
+                            });
+                        //setState(() {});
+
+                        if (response.statusCode == 200 ||
+                            response.statusCode == 201) {
+                          var val = json.decode(response.body);
+                          if (val['msg'] != null) {
+                            Fluttertoast.showToast(
+                                msg: val["msg"],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        PickUP(items:a)));
+                          } else if (val["errormsg"] != null) {
+                            Fluttertoast.showToast(
+                                msg: val["errormsg"],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.orange,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          }
+                          //gettoken();
+
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Something went wrong!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.orange,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Invalid Qr code",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }
+                    },
+                  )
+                : Center()
           ],
         ),
       ),
@@ -273,7 +369,7 @@ class InvoiceBody extends StatelessWidget {
               width: 50,
             ),
             Text(
-              a["total"].toString(),
+              a["total"].toString() + " ₹",
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -288,7 +384,7 @@ class InvoiceBody extends StatelessWidget {
 
   Container invoiceItem(
       int quantity, String imagePath, int price, String itemDesc) {
-    int totalValue = quantity*price;
+    int totalValue = quantity * price;
 
     return Container(
       height: 50,
@@ -310,28 +406,41 @@ class InvoiceBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
+            itemDesc,
+            style: TextStyle(color: Colors.black),
+          ),
+          Text(
             quantity.toString(),
             style: TextStyle(
                 color: Colors.black.withOpacity(0.6),
                 fontWeight: FontWeight.bold),
           ),
           Text(
-            "\$$price",
+            "X",
             style: TextStyle(
                 color: Colors.black.withOpacity(0.6),
-                fontSize: 15,
                 fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            width: 100,
+            //width: 20,
             child: Text(
-              itemDesc,
-              style: TextStyle(color: Colors.black),
+              "$price" + " ₹",
+              style: TextStyle(
+                  color: Colors.black.withOpacity(0.6),
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
             ),
           ),
           Text(
-            "\$$totalValue",
-            style: TextStyle(color: Colors.black,fontSize: 15, fontWeight: FontWeight.bold),
+            "=",
+            style: TextStyle(
+                color: Colors.black.withOpacity(0.6),
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "$totalValue" + " ₹",
+            style: TextStyle(
+                color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
           )
         ],
       ),
@@ -341,13 +450,9 @@ class InvoiceBody extends StatelessWidget {
   Row addItemAction() {
     return Row(
       children: [
-        Text("Items",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 18 
-                )),
+        Text("Items", style: TextStyle(color: Colors.black, fontSize: 18)),
         SizedBox(
-          width: 50, 
+          width: 50,
         ),
         FlatButton(
           color: iAccentColor2,
