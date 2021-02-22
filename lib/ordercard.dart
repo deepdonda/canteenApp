@@ -58,7 +58,7 @@ Widget orderCard( BuildContext context,int colors,var item) {
               
               Flexible(
                 child: Text(
-                  "Statuse = "+item['status'],
+                  "Status = "+item['status'],
                   style: TextStyle(
                     color: Color(colors),
                     fontSize: 15.0,

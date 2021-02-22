@@ -56,7 +56,7 @@ Widget foodCard(String img, String title, int price,String qty,var item) {
               children: [
                 Expanded(
                   child: Text(
-                    price.toString()+" Rs",
+                    price.toString()+" ₹",
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Color(0xFF0A192F),

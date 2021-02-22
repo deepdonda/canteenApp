@@ -24,9 +24,8 @@ class _OrderPageState extends State<OrderPage> {
   FlutterSecureStorage storage = FlutterSecureStorage();
 
   Future<Null> refreshList() async {
-    // refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
-    //getdata();
+
     setState(() {
       response = null;
       val = [];
@@ -43,7 +42,6 @@ class _OrderPageState extends State<OrderPage> {
     super.initState();
     response = null;
     gettoken();
-    //getdata();
   }
 
   void gettoken() async {
@@ -58,19 +56,11 @@ class _OrderPageState extends State<OrderPage> {
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      // print(response);
-      print(response.body);
       val = json.decode(response.body);
       items = val;
       items=items;
-      print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      print(val);
-      //print(val.length);
-      // if (val.length > 0) {
-      //   items = val[0]['items'];
-      //   total = val[0]['total'];
-      // }
+     
+
       setState(() {});
     } else {
       Fluttertoast.showToast(
@@ -105,35 +95,66 @@ class _OrderPageState extends State<OrderPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             
               SizedBox(
                 height: 20.0,
               ),
               Expanded(
                 child: response != null
-                    ? GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1, childAspectRatio: 2.6),
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          var item = items[index];
-                          // item=item["items"];
-                          //print("###################");
-                          print(item);
-                          //var url = item['foodimage'];
-                          int colors = 0000000;
-                          if (item["status"] == "placed") {
-                            colors = 0xFFB71C1C;
-                          }
-                          else if (item["status"] == "preparing") {
-                            colors = 0xFFFF9800;
-                          }
-                          else if (item["status"] == "completed") {
-                            colors = 0xFF4CAF50;
-                          }
+                    ? items.length > 0
+                        ? GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 1, childAspectRatio: 2.6),
+                            itemCount: items.length,
+                            itemBuilder: (context, index) {
+                              var item = items[index];
 
-                          return orderCard(context, colors, item);
-                        })
+                              int colors = 0000000;
+                              if (item["status"] == "placed") {
+                                colors = 0xFFB71C1C;
+                              } else if (item["status"] == "preparing") {
+                                colors = 0xFFFF9800;
+                              } else if (item["status"] == "completed") {
+                                colors = 0xFF4CAF50;
+                              }
+                              else if(item["status"]=="pick up"){
+                                colors = 0xFF004D40;
+                              }
+                              //
+
+                              return orderCard(context, colors, item);
+                            })
+                        : Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                   SizedBox(width: 50,),
+                                    Image.asset("assets/img/image.png",
+                                    width: 290,),
+                                  ],
+                                ),
+
+                                // Image.network(
+                                //     "https://dataspot24.com/wp-content/uploads/2018/11/file.png"),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "NO order placed!!!",
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                    fontSize: 20.0,
+                                    // color: Color(),
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
                     : Center(child: CircularProgressIndicator()),
               ),
             ],

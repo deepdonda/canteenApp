@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:canteen/main.dart';
 import 'package:canteen/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 
 var routes = <String, WidgetBuilder>{
   "/feedback": (BuildContext context) => FeedBackPage(),
@@ -19,14 +20,14 @@ class FeedBackPage extends StatefulWidget {
 
 class _FeedBackPageState extends State<FeedBackPage> {
   FlutterSecureStorage storage = FlutterSecureStorage();
-  var email, password, name, number;
+  var name, feedback;
   var token, temp;
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
     gettoken();
-    response="a";
+    response = "a";
   }
 
   void gettoken() async {
@@ -75,7 +76,6 @@ class _FeedBackPageState extends State<FeedBackPage> {
                                 onChanged: (val) {
                                   name = val;
                                 },
-                               
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Enter Name';
@@ -83,66 +83,77 @@ class _FeedBackPageState extends State<FeedBackPage> {
                                     return null;
                                   }
                                 }),
-                            
-                           
                             SizedBox(
                               height: 20,
                             ),
                             TextFormField(
-                              maxLines: null,
-                              minLines: 3,
+                                maxLines: null,
+                                minLines: 3,
                                 decoration: InputDecoration(
-                                  labelText: "Massage",
+                                  labelText: "Message",
                                   icon: Icon(Icons.feedback_outlined),
                                 ),
                                 onChanged: (val) {
-                                  name = val;
+                                  feedback = val;
                                 },
-                               
                                 validator: (value) {
                                   if (value.isEmpty) {
-                                    return 'Enter Massage';
+                                    return 'Enter Message';
                                   } else {
                                     return null;
                                   }
                                 }),
-                            
-                           
                             SizedBox(
                               height: 20,
                             ),
                             Expanded(
                               child: Center(
                                 child: ButtonWidget(
-                                  btnText: "Add FeedBack",
+                                  btnText: "Send FeedBack",
                                   onClick: () async {
                                     if (_formKey.currentState.validate()) {
-                                      items['name'] = name;
-                                      items['email'] = email;
-                                      items['contact'] = number;
-                                      //print(items);
-                                      gettoken();
-
-                                      // var response = await http.post(
-                                      //     "https://appcanteen.herokuapp.com/user/editprofile",
-                                      //     body: jsonEncode(items),
-                                      //     headers: {
-                                      //       "Authorization": "Bearer $token",
-                                      //       'Content-Type':
-                                      //           'application/json; charset=UTF-8',
-                                      //     });
+                                      // ignore: await_only_futures
+                                      await gettoken();
+                                      var response = await http.post(
+                                          "https://appcanteen.herokuapp.com/user/sendfeedback",
+                                          body: jsonEncode({
+                                            'name': name,
+                                            'feedback': feedback
+                                          }),
+                                          headers: {
+                                            "Authorization": "Bearer $token",
+                                            'Content-Type':
+                                                'application/json; charset=UTF-8',
+                                          });
                                       //setState(() {});
 
                                       if (response.statusCode == 200 ||
                                           response.statusCode == 201) {
                                         var val = json.decode(response.body);
-                                        Fluttertoast.showToast(
-                                            msg: val["msg"],
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            backgroundColor: Colors.orange,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0);
+                                        if (val['msg'] != null) {
+                                          Fluttertoast.showToast(
+                                              msg: val["msg"],
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomePage()));
+                                        } else if (val["errormsg"] != null) {
+                                          Fluttertoast.showToast(
+                                              msg: val["errormsg"],
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              backgroundColor: Colors.orange,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0);
+                                        }
+                                        //gettoken();
+
                                       } else {
                                         Fluttertoast.showToast(
                                             msg: "Something went wrong!",
