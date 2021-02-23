@@ -104,7 +104,7 @@ class _OrderPageState extends State<OrderPage> {
                         ? GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 1, childAspectRatio: 2.6),
+                                    crossAxisCount: 1, childAspectRatio: 2.2),
                             itemCount: items.length,
                             itemBuilder: (context, index) {
                               var item = items[index];

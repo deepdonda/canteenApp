@@ -36,8 +36,10 @@ dependencies:
   url_launcher:
   barcode_scan: ^1.0.0
   socket_io_client: ^0.9.12
+  webview_flutter: ^0.3.19+9
 
 dev_dependencies:
+  
   flutter_test:
     sdk: flutter
 
