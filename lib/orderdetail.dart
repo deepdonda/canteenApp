@@ -16,26 +16,7 @@ const iPrimarryColor = Color(0xFFF9FCFF);
 const iAccentColor = Color(0xFFFFB44B);
 const iAccentColor2 = Color(0xFFFFEAC9);
 var a;
-const demoData = [
-  {
-    "imagePath": "assets/images/image-1.png",
-    "price": 5,
-    "quantity": 2,
-    "itemDesc": "Gingerbread Cake with orange cream chees"
-  },
-  {
-    "imagePath": "assets/images/image-3.png",
-    "price": 10,
-    "quantity": 4,
-    "itemDesc": "Sauteed Onion and Hotdog with Ketchup"
-  },
-  {
-    "imagePath": "assets/images/image-2.png",
-    "price": 14,
-    "quantity": 1,
-    "itemDesc": "Supreme Pizza Recipe"
-  }
-];
+
 
 // ignore: must_be_immutable
 class Invoice extends StatelessWidget {
