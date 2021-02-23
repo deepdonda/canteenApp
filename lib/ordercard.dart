@@ -1,4 +1,3 @@
-import 'package:canteen/Constants.dart';
 import 'package:canteen/PaymentScreen.dart';
 import 'package:canteen/orderdetail.dart';
 //import 'package:canteen/widgets/btn_widget.dart';
@@ -104,9 +103,15 @@ Widget orderCard(BuildContext context, int colors, var item) {
                       ),
                     ),
                     onPressed: () async {    
+                          String a=DateTime.now().toString();
+                          a=a.replaceAll('-', '');
+                         a=a.replaceAll(' ', '');
+                         a=a.replaceAll(':', '');
+                         String orderid=item["_id"] + a;
                          
+                         print(orderid);
 
-                         Navigator.of(context).push(MaterialPageRoute(builder: (context)=> PaymentScreen(amount: item["total"].toString(),useremail:item["useremail"],userid:item["userid"],contact:item["contact"],orderid:item["_id"])));
+                         Navigator.of(context).push(MaterialPageRoute(builder: (context)=> PaymentScreen(amount: item["total"].toString(),useremail:item["useremail"],userid:item["userid"],contact:item["contact"],orderid:orderid,oldorderid:item["_id"])));
                     },
                   ):Center()
                 ],

@@ -11,10 +11,11 @@ import 'Constants.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String amount;
-  final String useremail, userid, contact, orderid;
+  final String useremail, userid, contact, orderid,oldorderid;
+ 
 
   PaymentScreen(
-      {this.amount, this.useremail, this.userid, this.contact, this.orderid});
+      {this.amount, this.useremail, this.userid, this.contact, this.orderid,this.oldorderid});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -30,8 +31,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     // print(widget.useremail);
     // print(widget.userid);
     // print(widget.contact);
-    // print(widget.orderid);
-
+    
+    
     return "<html> <body onload='document.f.submit();'> <form id='f' name='f' method='post' action='$PAYMENT_URL'><input type='hidden' name='orderID' value='ORDER_${DateTime.now().millisecondsSinceEpoch}'/>" +
         "<input  type='hidden' name='userid' value='${widget.userid}' />" +
         "<input  type='hidden' name='amount' value='${widget.amount}' />" +
@@ -76,7 +77,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     var response = await http.post(
         "https://appcanteen.herokuapp.com/user/paymentdone",
-        body: jsonEncode({'id': widget.orderid}),
+        body: jsonEncode({'id': widget.oldorderid}),
         headers: {
           "Authorization": "Bearer $token",
           'Content-Type': 'application/json; charset=UTF-8',
@@ -93,7 +94,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        
       } else if (val["errormsg"] != null) {
         Fluttertoast.showToast(
             msg: val["errormsg"],
@@ -159,6 +159,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     this.setState(() {
                       _loadingPayment = false;
                     });
+                    setState(() {});
                   }
                 }
                 if (page.contains("/callback")) {
@@ -181,6 +182,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 }
 
+/////////////////////////////////////$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 class PaymentSuccessfulScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -195,29 +197,24 @@ class PaymentSuccessfulScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Great!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25),
-                ),
-              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Image.asset("assets/img/image1.png", width: 100)]),
               SizedBox(
-                height: 10,
+                height: 10.0,
               ),
               Text(
-                "Thank you making the payment!",
-                style: TextStyle(fontSize: 30),
+                "Payment successful !!",
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B5E20)),
               ),
               SizedBox(
                 height: 10,
               ),
               MaterialButton(
-                  color: Colors.black,
+                  color: Colors.green,
                   child: Text(
                     "Close",
                     style: TextStyle(color: Colors.white),
@@ -234,6 +231,7 @@ class PaymentSuccessfulScreen extends StatelessWidget {
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class PaymentFailedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -248,29 +246,38 @@ class PaymentFailedScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "OOPS!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Image.asset(
+                    "assets/img/image2.jpg",
+                    width: 100)
+              ]),
+              SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                "Payment was not successful",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFB71C1C),
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
               Text(
-                "Payment was not successful, Please try again Later!",
-                style: TextStyle(fontSize: 30),
+                "Please try again Later!",
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFB71C1C),
+                ),
               ),
               SizedBox(
                 height: 10,
               ),
               MaterialButton(
-                  color: Colors.black,
+                  color: Color(0xFFB71C1C),
                   child: Text(
                     "Close",
                     style: TextStyle(color: Colors.white),
