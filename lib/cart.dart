@@ -100,41 +100,7 @@ class _CartPageState extends State<CartPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: double.infinity,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  color: Color(0x55d2d2d2),
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Search... ",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(left: 20.0),
-                      ),
-                    )),
-                    RaisedButton(
-                      elevation: 3.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                      ),
-                      color: Colors.orange,
-                    ),
-                  ],
-                ),
-              ),
+              
               SizedBox(
                 height: 20.0,
               ),

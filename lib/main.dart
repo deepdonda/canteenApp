@@ -9,12 +9,23 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+class Food {
+  String _id;
+  int foodqty;
+  bool foodavail;
+  bool unlimited;
+  String foodname;
+  int foodprice;
+  String foodimage;
+  String createdAt;
+}
+
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => HomePage(),
 };
 
 void main() => runApp(MyApp());
-var items, response, token,val;
+var items, response, token, val;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -39,17 +50,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   FlutterSecureStorage storage = FlutterSecureStorage();
   IO.Socket socket;
+  List<dynamic> _notes = List<dynamic>();
+  List<dynamic> _notesForDisplay = List<dynamic>();
+  String search;
 
   @override
   void initState() {
-    
     super.initState();
-   // establishConnection();
+    // establishConnection();
     //print(DateTime.now().toString().replaceAll(' ', '_'));
     gettoken();
-    
-    
   }
+
   Future<Null> refreshList() async {
     // refreshKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
@@ -65,13 +77,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void gettoken() async {
-    
     token = await storage.read(key: "token");
     getdata();
-   
 
     //RsetState(() {});
   }
+
   void establishConnection() async {
     print("");
     try {
@@ -83,35 +94,36 @@ class _HomePageState extends State<HomePage> {
       print("hello");
       socket.onConnect((_) {
         print('connected');
-        
       });
       //print("");
       socket.on('foodcrudbyadmin', (data) {
         print("here");
         print(data);
         //var json = jsonDecode(data);
-        setState(() {   
+        setState(() {
           response = null;
-      val = [];
-      items = [];
-      getdata();      
+          val = [];
+          items = [];
+          getdata();
         });
       });
     } catch (e) {
       print(e.toString());
     }
   }
+
   void getdata() async {
-    
     response = await http.get(
       "https://appcanteen.herokuapp.com/user/getallfooditem",
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       val = json.decode(response.body);
-     // print(val);
+      // print(val);
       items = val["msg"];
-     // print(items);
+      _notes.addAll(items);
+      _notesForDisplay.addAll(items);
+      // print(items);
       setState(() {});
     } else {
       Fluttertoast.showToast(
@@ -142,7 +154,7 @@ class _HomePageState extends State<HomePage> {
         child: Navbar(),
       )),
       // body: Center(child: Text("home page"),),
-      body:RefreshIndicator (
+      body: RefreshIndicator(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
           child: Column(
@@ -165,13 +177,28 @@ class _HomePageState extends State<HomePage> {
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 20.0),
                       ),
+                      onChanged: (val) {
+                        search = val;
+                        search = search.toLowerCase();
+                        setState(() {
+                          _notesForDisplay = _notes.where((note) {
+                            var noteTitle = note["foodname"].toLowerCase();
+                            return noteTitle.contains(search);
+                          }).toList();
+                          items = _notesForDisplay;
+                        });
+                      },
                     )),
                     RaisedButton(
                       elevation: 3.0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        
+                        
+                        //setState(() {});
+                      },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: Icon(
@@ -192,16 +219,16 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                   child: response != null
                       ? GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: 0.68),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, childAspectRatio: 0.68),
                           itemCount: items.length,
                           itemBuilder: (context, index) {
                             var item = items[index];
                             var url = item['foodimage'];
-                            String qty="" + item['foodqty'].toString();
-                            if(item['foodqty']<0)
-                            {
-                                qty="available";
+                            String qty = "" + item['foodqty'].toString();
+                            if (item['foodqty'] < 0) {
+                              qty = "available";
                             }
                             return foodCard(url, item['foodname'],
                                 item['foodprice'], qty, item);
@@ -210,7 +237,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-         onRefresh: refreshList,
+        onRefresh: refreshList,
       ),
     );
   }
