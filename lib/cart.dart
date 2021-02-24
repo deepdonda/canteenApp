@@ -134,7 +134,7 @@ class _CartPageState extends State<CartPage> {
                             ),
                             Center(
                               child: Text(
-                                "Total:" + total.toString() + " Rs",
+                                "Total:" + total.toString() + " ₹",
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   color: Color(0xFF0A192F),

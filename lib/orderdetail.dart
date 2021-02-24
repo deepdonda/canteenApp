@@ -17,7 +17,6 @@ const iAccentColor = Color(0xFFFFB44B);
 const iAccentColor2 = Color(0xFFFFEAC9);
 var a;
 
-
 // ignore: must_be_immutable
 class Invoice extends StatelessWidget {
   var todo;
@@ -132,18 +131,18 @@ class Invoice extends StatelessWidget {
       children: [
         Text(
           "Delivery address",
-          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2),
+          style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold, letterSpacing: 1),
         ),
         SizedBox(
           height: 10,
         ),
-        Text(
-          "KK 234 rd 23 st",
-        ),
+        Text("FoodZone , Ddu",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
         SizedBox(
           height: 10,
         ),
-        Text("Kimihurura")
+        Text("Nadiad",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
       ],
     );
   }
@@ -151,9 +150,9 @@ class Invoice extends StatelessWidget {
   Text topHeaderText(String label) {
     return Text(label,
         style: TextStyle(
-          color: Colors.white.withOpacity(0.6),
-          fontSize: 15,
-        ));
+            color: Colors.white.withOpacity(0.6),
+            fontSize: 15,
+            fontWeight: FontWeight.bold));
   }
 }
 
@@ -293,7 +292,7 @@ class _InvoiceBodyState extends State<InvoiceBody> {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        PickUP(items:a)));
+                                        PickUP(items: a)));
                           } else if (val["errormsg"] != null) {
                             Fluttertoast.showToast(
                                 msg: val["errormsg"],
@@ -339,7 +338,7 @@ class _InvoiceBodyState extends State<InvoiceBody> {
         Row(
           children: [
             Text(
-              "Total: ",
+              "Total : ",
               style: TextStyle(
                 color: Colors.black.withOpacity(0.6),
                 fontWeight: FontWeight.bold,
@@ -435,15 +434,15 @@ class _InvoiceBodyState extends State<InvoiceBody> {
         SizedBox(
           width: 50,
         ),
-        FlatButton(
-          color: iAccentColor2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          child: Row(
-            children: [Icon(Icons.add), Text("Add items")],
-          ),
-          onPressed: () {},
-        )
+        // FlatButton(
+        //   color: iAccentColor2,
+        //   shape:
+        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        //   child: Row(
+        //     children: [Icon(Icons.add), Text("Add items")],
+        //   ),
+        //   onPressed: () {},
+        // )
       ],
     );
   }

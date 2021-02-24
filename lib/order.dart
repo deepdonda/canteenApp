@@ -144,7 +144,7 @@ class _OrderPageState extends State<OrderPage> {
                                   height: 20,
                                 ),
                                 Text(
-                                  "NO order placed!!!",
+                                  "Not found any order!",
                                   style: TextStyle(
                                     color: Colors.orange,
                                     fontSize: 20.0,

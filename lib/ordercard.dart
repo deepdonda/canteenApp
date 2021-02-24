@@ -27,7 +27,7 @@ Widget orderCard(BuildContext context, int colors, var item) {
             children: [
               Flexible(
                 child: Text(
-                  "OrderId:" + item["_id"],
+                  "OrderId : " + item["_id"],
                   style: TextStyle(
                     fontSize: 11.0,
                     fontWeight: FontWeight.w600,
@@ -40,7 +40,7 @@ Widget orderCard(BuildContext context, int colors, var item) {
               ),
               Flexible(
                 child: Text(
-                  "Order Date:" + item["orderdate"],
+                  "Order Date : " + item["orderdate"],
                   style: TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.w600,
@@ -53,7 +53,7 @@ Widget orderCard(BuildContext context, int colors, var item) {
               ),
               Flexible(
                 child: Text(
-                  "Status = " + item['status'],
+                  "Status : " + item['status'],
                   style: TextStyle(
                     color: Color(colors),
                     fontSize: 15.0,
@@ -72,7 +72,7 @@ Widget orderCard(BuildContext context, int colors, var item) {
                    Expanded(
 
                         child: Text(
-                          "Total:" + item["total"].toString() + " ₹",
+                          "Total : " + item["total"].toString() + " ₹",
                           style: TextStyle(
                             fontSize: 18.0,
                             color: Color(0xFF0A192F),

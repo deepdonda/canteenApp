@@ -9,16 +9,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class Food {
-  String _id;
-  int foodqty;
-  bool foodavail;
-  bool unlimited;
-  String foodname;
-  int foodprice;
-  String foodimage;
-  String createdAt;
-}
+
 
 var routes = <String, WidgetBuilder>{
   "/home": (BuildContext context) => HomePage(),
