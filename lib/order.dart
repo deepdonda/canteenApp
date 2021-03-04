@@ -117,7 +117,7 @@ class _OrderPageState extends State<OrderPage> {
                               } else if (item["status"] == "completed") {
                                 colors = 0xFF4CAF50;
                               }
-                              else if(item["status"]=="pick up"){
+                              else if(item["status"]=="picked up"){
                                 colors = 0xFF004D40;
                               }
                               //
