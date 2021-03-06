@@ -255,7 +255,7 @@ class _InvoiceBodyState extends State<InvoiceBody> {
                             width: 5,
                           ),
                           Text(
-                            "Scan", //////////////////////////
+                            "Scan", 
                             style: TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold),
                           )
@@ -263,7 +263,6 @@ class _InvoiceBodyState extends State<InvoiceBody> {
                       ),
                     ),
                     onPressed: () async {
-                      //////////////////////////////////////////////////////////////////////////////////
                       await _scanQR();
                       if (result == a["_id"]) {
                         // ignore: await_only_futures
@@ -276,7 +275,7 @@ class _InvoiceBodyState extends State<InvoiceBody> {
                               "Authorization": "Bearer $token",
                               'Content-Type': 'application/json; charset=UTF-8',
                             });
-                        //setState(() {});
+                        
 
                         if (response.statusCode == 200 ||
                             response.statusCode == 201) {
@@ -434,15 +433,7 @@ class _InvoiceBodyState extends State<InvoiceBody> {
         SizedBox(
           width: 50,
         ),
-        // FlatButton(
-        //   color: iAccentColor2,
-        //   shape:
-        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        //   child: Row(
-        //     children: [Icon(Icons.add), Text("Add items")],
-        //   ),
-        //   onPressed: () {},
-        // )
+       
       ],
     );
   }
