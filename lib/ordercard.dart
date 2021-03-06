@@ -80,7 +80,7 @@ Widget orderCard(BuildContext context, int colors, var item) {
                           ),
                         ),
                       ),
-                    SizedBox(width: 100,),
+                    SizedBox(width: 90),
                     item["paymentstatus"] != "paid" ?FlatButton(
                     color: iAccentColor,
                     shape: RoundedRectangleBorder(

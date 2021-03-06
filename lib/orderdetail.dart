@@ -240,7 +240,7 @@ class _InvoiceBodyState extends State<InvoiceBody> {
             )),
             invoiceTotal(totalAmount),
             SizedBox(height: 20),
-            a["status"] != "pick up"
+            a["status"] != "picked up"
                 ? FlatButton(
                     color: iAccentColor,
                     shape: RoundedRectangleBorder(
