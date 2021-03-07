@@ -17,7 +17,7 @@ class Authservices {
     //print(email+" "+password);
     try {
       return await dio.post("https://appcanteen.herokuapp.com/login",
-          data: {"email": email, "p1": password});
+          data: {"email": email, "p": password});
     } on DioError catch (e) {
       print(e.response);
       // e.response.data['msg']
