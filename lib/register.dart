@@ -85,7 +85,7 @@ class _RegPageState extends State<RegPage> {
                                 .hasMatch(value)) {
                               return null;
                             } else {
-                              return 'Enter valid password';
+                              return "Password should contain \n\t• one number\n\t• one capital letter\n\t• minimum length 8";
                             }
                           }),
                       TextFormField(
