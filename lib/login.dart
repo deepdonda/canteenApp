@@ -98,9 +98,8 @@ class _LoginPageState extends State<LoginPage> {
                                     }),
                             )),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children:[ ButtonWidget(
+                          child: Center(
+                            child: ButtonWidget(
                               onClick: () {
                                 if (_formKey.currentState.validate()) {
                                   Authservices()
@@ -161,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                                 }
                               },
                               btnText: "Login",
-                            ),]
+                            ),
                           ),
                         ),
                         const Divider(
@@ -179,10 +178,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [ButtonWidget(
+                          child: Center(
+                            child: ButtonWidget(
                               onClick: () {
                                 Navigator.push(
                                     context,
@@ -190,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                                         builder: (context) => RegPage()));
                               },
                               btnText: "Register",
-                            ),]
+                            ),
                           ),
                         ),
                         SizedBox(

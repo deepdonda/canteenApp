@@ -1,5 +1,6 @@
 import 'dart:convert';
 //import 'package:canteen/cart.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -25,9 +26,14 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              img,
-              height: 120.0,
+            // Image.network(
+            //   img,
+            //   height: 120.0,
+            // ),
+            CachedNetworkImage(
+              imageUrl:img,
+              placeholder: (context, url) => SizedBox(height: 120,),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             SizedBox(
               height: 8.0,
