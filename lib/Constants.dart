@@ -1,4 +1,4 @@
-const PAYMENT_URL = "";
+const PAYMENT_URL = "https://demopayutsav.herokuapp.com/pay2";
 
 
 const STATUS_LOADING = "PAYMENT_LOADING";

@@ -39,6 +39,7 @@ dependencies:
   webview_flutter: ^0.3.19+9
   flutter_launcher_icons: ^0.7.3
   flutter_launcher_name: ^0.0.1
+  cached_network_image: ^2.5.1
 dev_dependencies:
   
   flutter_test:
