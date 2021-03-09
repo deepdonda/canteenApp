@@ -2,9 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
 import 'dart:convert';
-//import 'dart:js';
-//import 'package:canteen/cart.dart';
-//import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -30,7 +27,8 @@ Widget foodCard(String img, String title, int price, String qty, var item) {
            
             CachedNetworkImage(
               imageUrl:img,
-              placeholder: (context, url) => SizedBox(height: 120,),
+              height: 110,
+              placeholder: (context, url) => SizedBox(height: 110,),
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             SizedBox(
