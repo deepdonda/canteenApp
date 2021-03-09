@@ -89,7 +89,7 @@ class Navbar extends StatelessWidget {
           Icons.feedback_outlined,
           color: Colors.black,
         ),
-        title: Text("Add FeedBack"),
+        title: Text("Send FeedBack"),
       ),
       ListTile(
         onTap: () async {
