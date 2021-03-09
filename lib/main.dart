@@ -61,6 +61,8 @@ class _HomePageState extends State<HomePage> {
       response = null;
       val = [];
       items = [];
+      _notes.removeRange(0,_notes.length);
+       _notesForDisplay.removeRange(0,_notesForDisplay.length);
       getdata();
     });
 
@@ -95,6 +97,7 @@ class _HomePageState extends State<HomePage> {
           response = null;
           val = [];
           items = [];
+          
           getdata();
         });
       });
