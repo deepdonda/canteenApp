@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:canteen/login.dart';
 import 'package:canteen/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -35,6 +36,82 @@ class _MyProfilePageState extends State<MyProfilePage> {
     // setState(() {
 
     //     });
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+         Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed: () async {
+        items['name'] = name;
+        items['email'] = email;
+        items['contact'] = number;
+        //print(items);
+        gettoken();
+
+        var response = await http.post(
+            "https://appcanteen.herokuapp.com/user/editprofile",
+            body: jsonEncode(items),
+            headers: {
+              "Authorization": "Bearer $token",
+              'Content-Type': 'application/json; charset=UTF-8',
+            });
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          var val = json.decode(response.body);
+          Fluttertoast.showToast(
+              msg: val["msg"],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.orange,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          if (val["emailchange"] == "yes") {
+            await storage.delete(key: "token");
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => LoginPage()));
+            setState(() {});
+          } else {
+            Navigator.of(context).pop(); // dismiss dialog
+            
+            getdata();
+          }
+          //gettoken();
+
+        } else {
+          Fluttertoast.showToast(
+              msg: "Something went wrong!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.orange,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Change Mail"),
+      content: Text(
+          "If you have changed your email then you will we logged out and you have to login with new email!"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   void getdata() async {
@@ -81,142 +158,107 @@ class _MyProfilePageState extends State<MyProfilePage> {
       body: Container(
         decoration: BoxDecoration(color: Colors.white),
         padding: EdgeInsets.only(bottom: 30),
-        child:response != null ? Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(
-                margin: EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: Form(
-                  key: _formKey,
-                  child: Expanded(
-                      // mainAxisSize: MainAxisSize.max,
-                      child: ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Full name",
-                            icon: Icon(Icons.person),
-                          ),
-                          onChanged: (val) {
-                            name = val;
-                          },
-                          initialValue: items['name'],
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Enter Name';
-                            } else {
-                              return null;
-                            }
-                          }),
-                      TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            icon: Icon(Icons.email),
-                          ),
-                          initialValue: items['email'],
-                          onChanged: (val) {
-                            email = val;
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Enter Email';
-                            } else if (RegExp(
-                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                .hasMatch(value)) {
-                              return null;
-                            } else {
-                              return 'Enter valid email';
-                            }
-                          }),
-                      TextFormField(
-                          keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            labelText: "Phone Number",
-                            icon: Icon(Icons.call),
-                          ),
-                          initialValue: items['contact'],
-                          onChanged: (val) {
-                            number = val;
-                            //print(number);
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Enter phone number';
-                            } else if (RegExp(
-                                    r'^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$')
-                                .hasMatch(value)) {
-                              return null;
-                            } else {
-                              return 'Enter valid Phone number';
-                            }
-                          }),
-                      SizedBox(
-                        height: 20,
+        child: response != null
+            ? Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20, right: 20, top: 30),
+                      child: Form(
+                        key: _formKey,
+                        child: Expanded(
+                            // mainAxisSize: MainAxisSize.max,
+                            child: ListView(
+                          shrinkWrap: true,
+                          children: <Widget>[
+                            TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: "Full name",
+                                  icon: Icon(Icons.person),
+                                ),
+                                onChanged: (val) {
+                                  name = val;
+                                },
+                                initialValue: items['name'],
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Name';
+                                  } else {
+                                    return null;
+                                  }
+                                }),
+                            TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: "Email",
+                                  icon: Icon(Icons.email),
+                                ),
+                                initialValue: items['email'],
+                                onChanged: (val) {
+                                  email = val;
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter Email';
+                                  } else if (RegExp(
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      .hasMatch(value)) {
+                                    return null;
+                                  } else {
+                                    return 'Enter valid email';
+                                  }
+                                }),
+                            TextFormField(
+                                keyboardType: TextInputType.phone,
+                                decoration: InputDecoration(
+                                  labelText: "Phone Number",
+                                  icon: Icon(Icons.call),
+                                ),
+                                initialValue: items['contact'],
+                                onChanged: (val) {
+                                  number = val;
+                                  //print(number);
+                                },
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter phone number';
+                                  } else if (RegExp(
+                                          r'^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$')
+                                      .hasMatch(value)) {
+                                    return null;
+                                  } else {
+                                    return 'Enter valid Phone number';
+                                  }
+                                }),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: ButtonWidget(
+                                  btnText: "Edit profile",
+                                  onClick: () async {
+                                    if (_formKey.currentState.validate()) {
+                                      showAlertDialog(context);
+                                    } else {
+                                      print("not ok");
+                                    }
+
+                                    if (temp != null) {
+                                      //Navigator.pop(context);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                       ),
-                      Expanded(
-                        child: Center(
-                          child: ButtonWidget(
-                            btnText: "Edit profile",
-                            onClick: () async {
-                              if (_formKey.currentState.validate()) {
-                                items['name'] = name;
-                                items['email'] = email;
-                                items['contact'] = number;
-                                //print(items);
-                                gettoken();
-
-                                var response = await http.post(
-                                    "https://appcanteen.herokuapp.com/user/editprofile",
-                                    body: jsonEncode(items),
-                                    headers: {
-                                      "Authorization": "Bearer $token",
-                                      'Content-Type':
-                                          'application/json; charset=UTF-8',
-                                    });
-                                //setState(() {});
-
-                                if (response.statusCode == 200 ||
-                                    response.statusCode == 201) {
-                                  var val = json.decode(response.body);
-                                  Fluttertoast.showToast(
-                                      msg: val["msg"],
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      backgroundColor: Colors.orange,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                  //gettoken();
-                                  getdata();
-                                 // setState(() {});
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: "Something went wrong!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      backgroundColor: Colors.orange,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                }
-                              } else {
-                                print("not ok");
-                              }
-
-                              if (temp != null) {
-                                //Navigator.pop(context);
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-                ),
-              ),
-            )
-          ],
-        ):Center( child:CircularProgressIndicator()),
+                    ),
+                  )
+                ],
+              )
+            : Center(child: CircularProgressIndicator()),
       ),
     );
   }
