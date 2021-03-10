@@ -1,5 +1,4 @@
 import 'dart:convert';
-//import 'package:canteen/cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,12 +8,7 @@ var response,token ;
 FlutterSecureStorage storage = FlutterSecureStorage();
 void gettoken() async {
     token = await storage.read(key: "token");
-         
-  /// getdata();
   }
-  
-  
-
 // ignore: non_constant_identifier_names
 Widget CartCard(String img, String title, int price, int qty, var item) {
   
@@ -26,12 +20,9 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image.network(
-            //   img,
-            //   height: 120.0,
-            // ),
             CachedNetworkImage(
               imageUrl:img,
+              height:120,
               placeholder: (context, url) => SizedBox(height: 120,),
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
@@ -87,9 +78,7 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
                       body: jsonEncode(item),
                       headers: {"Authorization": "Bearer $token",
                       'Content-Type': 'application/json; charset=UTF-8',}
-                      );
-                      //setState(() {});
-                     
+                      );                     
                       if (response.statusCode == 200 ||
                           response.statusCode == 201) {
                         var val = json.decode(response.body);
@@ -99,12 +88,7 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: Colors.orange,
                             textColor: Colors.white,
-                            fontSize: 16.0);  
-                           //gettoken();
-                          
-                           
-                           
-                                        
+                            fontSize: 16.0);                    
                       } else {
                         Fluttertoast.showToast(
                             msg: "Something went wrong!",
@@ -114,8 +98,7 @@ Widget CartCard(String img, String title, int price, int qty, var item) {
                             textColor: Colors.white,
                             fontSize: 16.0);
                       }
-                    },
-                    
+                    },                  
                 
                     icon: Icon(
                       Icons.delete,
