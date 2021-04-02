@@ -2,7 +2,7 @@
 
 ![alt text](/logo.png)
 
-<h2> CanteenManagement Website and backend Github Link : https://github.com/shekhutsav1962001/CanteenManagement </h2> 
+<h2> CanteenManagement Website and backend source code : <a href="https://github.com/shekhutsav1962001/CanteenManagement">view</a></h2>  
 
 
 # How_To_Run
